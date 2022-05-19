@@ -18,6 +18,10 @@
     <context:component-scan base-package="com.mainlab.controller" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
+    <!-- EnableWebMVC -->
+    <mvc:annotation-driven />
+    <!-- Static Resources -->
+    <mvc:resources mapping="/**" location="/resources/"/>
 
     <security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled" proxy-target-class="true" />
 </beans>
