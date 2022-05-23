@@ -12,3 +12,6 @@ phases:
       - docker build -t $tag:latest .
       - docker tag $tag:latest $ecr:$tag
       - docker push $ecr
+artifacts:
+  files:
+    - '**/*'
