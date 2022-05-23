@@ -12,6 +12,10 @@ phases:
       - docker build -t $tag:latest .
       - docker tag $tag:latest $ecr:$tag
       - docker push $ecr
+  post_build:
+    commands:
+      - echo Build Completed. Create image definition file...
+      - printf '[{"name":"jinspark-lab","imageUri":"%s"}]' $ecr:$tag > imagedefinitions.json
 artifacts:
   files:
-    - '**/*'
+    - imagedefinitions.json
