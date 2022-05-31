@@ -7,6 +7,20 @@ import java.util.*;
 @Service
 public class AlgorithmService {
 
+    public int numberOfArithmeticSlices(int[] nums) {
+        int solve = 0;
+        int from = 0;
+        for (int to = 1; to < nums.length; to++) {
+            while (nums[to] - nums[to - 1] != nums[from + 1] - nums[from]) {
+                from++;
+            }
+            if (to - from >= 2) {
+                solve += (to - from - 1);
+            }
+        }
+        return solve;
+    }
+
     public int[] topKFrequent(int[] nums, int k) {
         Map<Integer, Integer> countMap = new LinkedHashMap<>();
         for (int num : nums) {
