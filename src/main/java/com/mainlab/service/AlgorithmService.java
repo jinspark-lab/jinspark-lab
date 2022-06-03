@@ -7,7 +7,6 @@ import java.util.*;
 @Service
 public class AlgorithmService {
 
-
     public int numberOfArithmeticSlices(int[] nums) {
         int solve = 0;
         int from = 0;
@@ -135,10 +134,6 @@ public class AlgorithmService {
 
 //        String tc = "bcabc";
 //        removeDuplicateLetters(tc);
-
-//        String s = "abbababb";
-//        String p = "abab";
-//        findAnagrams(s, p);
 
         System.out.println("DONE");
     }

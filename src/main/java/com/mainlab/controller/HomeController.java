@@ -3,6 +3,7 @@ package com.mainlab.controller;
 import com.mainlab.service.AlgorithmService;
 import com.mainlab.service.MyTableService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,9 +17,8 @@ public class HomeController {
     private AlgorithmService algorithmService;
 
     @RequestMapping("/")
-    public String greeting() {
-        myTableService.listMyTable();
-        return "Hello World";
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok().body("Hello World");
     }
 
     @RequestMapping("/algo")
