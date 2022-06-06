@@ -1,6 +1,9 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      java: openjdk11
   pre_build:
     commands:
       - echo logging into docker
@@ -9,6 +12,9 @@ phases:
     commands:
       - echo Entered the post_build phase...
       - echo Build completed on `date`
+      - echo Run Maven Command...
+      - mvn clean package install org.codehaus.cargo:cargo-maven2-plugin:run
+      - echo Creating Docker build...
       - docker build -t $tag:latest .
       - docker tag $tag:latest $ecr:$tag
       - docker push $ecr
