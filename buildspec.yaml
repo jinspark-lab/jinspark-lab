@@ -17,7 +17,7 @@ phases:
       - echo Creating Docker build...
       - docker build -t $tag:latest .
       - docker tag $tag:latest $ecr:$tag
-      - docker push $ecr
+      - docker push $ecr:$tag
   post_build:
     commands:
       - echo Build Completed. Create image definition file...
