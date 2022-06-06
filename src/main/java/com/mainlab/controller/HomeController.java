@@ -16,7 +16,7 @@ public class HomeController {
     @Autowired
     private AlgorithmService algorithmService;
 
-    @RequestMapping("/")
+    @RequestMapping("/health")
     public ResponseEntity<String> healthCheck() {
         return ResponseEntity.ok().body("Hello World");
     }
@@ -26,5 +26,4 @@ public class HomeController {
         algorithmService.run();
         return "Hello Algorithm";
     }
-
 }
