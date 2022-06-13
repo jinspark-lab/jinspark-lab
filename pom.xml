@@ -116,6 +116,13 @@
             <version>8.0.21</version>
         </dependency>
 
+        <!-- AWS Cloud -->
+        <dependency>
+            <groupId>com.amazonaws.secretsmanager</groupId>
+            <artifactId>aws-secretsmanager-jdbc</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+
         <!-- etc -->
         <dependency>
             <groupId>org.projectlombok</groupId>
