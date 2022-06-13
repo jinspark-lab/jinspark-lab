@@ -26,13 +26,16 @@ public class HomeController {
 
     @RequestMapping("/database")
     public ResponseEntity<String> databaseTest() {
-
-        List<Content> contentList = contentService.getContentList();
-        StringBuilder sb = new StringBuilder();
-        for (Content content : contentList) {
-            sb.append(content.getContentId()).append(":").append(content.getContentType()).append("\r\n");
+        try {
+            List<Content> contentList = contentService.getContentList();
+            StringBuilder sb = new StringBuilder();
+            for (Content content : contentList) {
+                sb.append(content.getContentId()).append(":").append(content.getContentType()).append("\r\n");
+            }
+            return ResponseEntity.ok().body(sb.toString());
+        } catch (Exception e) {
+            return ResponseEntity.ok().body(e.getMessage());
         }
-        return ResponseEntity.ok().body(sb.toString());
     }
 
     @RequestMapping("/algo")
