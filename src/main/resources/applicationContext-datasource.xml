@@ -10,12 +10,10 @@
 
     <tx:annotation-driven transaction-manager="masterTransactionManager" proxy-target-class="true"/>
 
-<!--    FIXME: Temporary Configuration for testing -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
-        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://ec2-13-125-246-147.ap-northeast-2.compute.amazonaws.com/mydb" />
-        <property name="username" value="database" />
-        <property name="password" value="Query123!" />
+        <property name="driverClassName" value="${spring.datasource.driver-class-name}" />
+        <property name="url" value="${spring.datasource.url}" />
+        <property name="username" value="${spring.datasource.username}" />
     </bean>
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
