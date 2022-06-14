@@ -8,6 +8,9 @@
 		    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
 		    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <!-- Properties -->
+    <context:property-placeholder location="classpath:*.properties" />
+
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <context:annotation-config/>
 

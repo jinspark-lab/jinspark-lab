@@ -11,7 +11,7 @@
     <tx:annotation-driven transaction-manager="masterTransactionManager" proxy-target-class="true"/>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-        <property name="driverClass" value="com.amazonaws.secretsmanager.sql.AWSSecretsManagerMySQLDriver" />
+        <property name="driverClass" value="${spring.datasource.driver-class-name}" />
         <property name="jdbcUrl" value="${spring.datasource.url}" />
         <property name="user" value="${spring.datasource.username}" />
     </bean>
