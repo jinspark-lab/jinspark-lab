@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -39,9 +38,9 @@ public class DatabaseConfig {
     @Bean(name = "dataSource")
     public DataSource dataSource() throws PropertyVetoException {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
-        dataSource.setDriverClass(driverClassName);
-        dataSource.setJdbcUrl(url);
-        dataSource.setUser(username);
+        dataSource.setDriverClass("com.amazonaws.secretsmanager.sql.AWSSecretsManagerMySQLDriver");
+        dataSource.setJdbcUrl("jdbc-secretsmanager:mysql://jinsparklabdb.cmwkiunfkhwl.us-east-1.rds.amazonaws.com:3306/mydb");
+        dataSource.setUser("jinsparklab-rdb-secret");
         return dataSource;
     }
 
