@@ -60,6 +60,11 @@ public class DatabaseConfig {
     }
 
     @Bean
+    public SqlSessionFactory sqlSessionFactory() throws Exception {
+        return sqlSessionFactoryBean(dataSource()).getObject();
+    }
+
+    @Bean
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
