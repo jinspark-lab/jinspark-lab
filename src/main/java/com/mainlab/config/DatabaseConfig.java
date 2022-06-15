@@ -38,9 +38,9 @@ public class DatabaseConfig {
     @Bean(name = "dataSource")
     public DataSource dataSource() throws PropertyVetoException {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
-        dataSource.setDriverClass("com.amazonaws.secretsmanager.sql.AWSSecretsManagerMySQLDriver");
-        dataSource.setJdbcUrl("jdbc-secretsmanager:mysql://jinsparklabdb.cmwkiunfkhwl.us-east-1.rds.amazonaws.com:3306/mydb");
-        dataSource.setUser("jinsparklab-rdb-secret");
+        dataSource.setDriverClass(driverClassName);
+        dataSource.setJdbcUrl(url);
+        dataSource.setUser(username);
         return dataSource;
     }
 
