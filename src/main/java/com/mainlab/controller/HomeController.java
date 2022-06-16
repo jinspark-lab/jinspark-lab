@@ -3,6 +3,7 @@ package com.mainlab.controller;
 import com.mainlab.model.Content;
 import com.mainlab.service.AlgorithmService;
 import com.mainlab.service.ContentService;
+import com.mainlab.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,14 @@ public class HomeController {
 
     @Autowired
     private AlgorithmService algorithmService;
+
+    @Autowired
+    private ProfileService profileService;
+
+    @RequestMapping("/env")
+    public ResponseEntity<String> getEnvProfile() {
+        return ResponseEntity.ok().body(profileService.getProfile());
+    }
 
     @RequestMapping("/health")
     public ResponseEntity<String> healthCheck() {

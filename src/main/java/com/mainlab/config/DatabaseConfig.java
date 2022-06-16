@@ -24,7 +24,10 @@ import java.io.IOException;
 public class DatabaseConfig {
 
     @Autowired
-    ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
+
+    @Value("${spring.profiles.active}")
+    private String profile;
 
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
@@ -35,17 +38,23 @@ public class DatabaseConfig {
     @Value("${spring.datasource.username}")
     private String username;
 
+    @Value("${spring.datasource.password}")
+    private String password;
+
     @Bean(name = "dataSource")
-    public DataSource dataSource() throws PropertyVetoException, ClassNotFoundException {
+    public DataSource dataSource() throws PropertyVetoException {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         dataSource.setDriverClass(driverClassName);
         dataSource.setJdbcUrl(url);
         dataSource.setUser(username);
+        if (profile.equals("dev")) {
+            dataSource.setPassword(password);
+        }
         return dataSource;
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() throws PropertyVetoException, ClassNotFoundException {
+    public PlatformTransactionManager transactionManager() throws PropertyVetoException {
         return new DataSourceTransactionManager(dataSource());
     }
 
@@ -67,5 +76,4 @@ public class DatabaseConfig {
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
-
 }

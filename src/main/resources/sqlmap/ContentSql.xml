@@ -8,4 +8,13 @@
         FROM
             `content`
     </select>
+    <select id="selectContentListByContentType" parameterType="map" resultType="com.mainlab.model.Content">
+        SELECT
+            `content_id` as `contentId`,
+            `content_type` as `contentType`
+        FROM
+            `content`
+        WHERE
+            `content_type` = #{contentType}
+    </select>
 </mapper>
