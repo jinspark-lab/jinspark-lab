@@ -36,7 +36,8 @@ public class DatabaseConfig {
     private String username;
 
     @Bean(name = "dataSource")
-    public DataSource dataSource() throws PropertyVetoException {
+    public DataSource dataSource() throws PropertyVetoException, ClassNotFoundException {
+        Class.forName("com.mysql.cj.jdbc.Driver", false, this.getClass().getClassLoader());
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         dataSource.setDriverClass(driverClassName);
         dataSource.setJdbcUrl(url);
@@ -45,7 +46,7 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() throws PropertyVetoException {
+    public PlatformTransactionManager transactionManager() throws PropertyVetoException, ClassNotFoundException {
         return new DataSourceTransactionManager(dataSource());
     }
 
