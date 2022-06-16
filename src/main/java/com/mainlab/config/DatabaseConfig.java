@@ -37,7 +37,6 @@ public class DatabaseConfig {
 
     @Bean(name = "dataSource")
     public DataSource dataSource() throws PropertyVetoException, ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver", false, this.getClass().getClassLoader());
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         dataSource.setDriverClass(driverClassName);
         dataSource.setJdbcUrl(url);
