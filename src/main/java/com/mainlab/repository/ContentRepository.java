@@ -1,6 +1,7 @@
 package com.mainlab.repository;
 
 import com.mainlab.model.Content;
+import com.mainlab.model.ContentType;
 import org.springframework.stereotype.Repository;
 
 import java.util.LinkedHashMap;
@@ -10,13 +11,27 @@ import java.util.Map;
 @Repository
 public class ContentRepository extends BaseRdbDaoSupport {
 
-    public List<Content> selectContentList() {
-        return sqlSessionTemplate.selectList("ContentSql.selectContentList");
+    @Override
+    protected String getNamespace() {
+        return "ContentSql";
     }
 
-    public List<Content> selectContentListByContentType(String contentType) {
+    public List<Content> selectContentList() {
+        return sqlSessionTemplate.selectList(getMappedSql("selectContentList"));
+    }
+
+    public Content selectContent(int contentId) {
+        return sqlSessionTemplate.selectOne(getMappedSql("selectContent"), contentId);
+    }
+
+    public List<Content> selectContentListByContentType(ContentType contentType) {
         Map<String, Object> parameter = new LinkedHashMap<>();
         parameter.put("contentType", contentType);
-        return sqlSessionTemplate.selectList("ContentSql.selectContentListByContentType", parameter);
+        return sqlSessionTemplate.selectList(getMappedSql("selectContentListByContentType"), parameter);
     }
+
+    public void insertContent(Content content) {
+        sqlSessionTemplate.insert(getMappedSql("insertContent"), content);
+    }
+
 }

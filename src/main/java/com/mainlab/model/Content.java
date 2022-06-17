@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Content {
     private int contentId;
-    private String contentType;
+    private ContentType contentType;
 }

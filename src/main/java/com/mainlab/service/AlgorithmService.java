@@ -7,33 +7,6 @@ import java.util.*;
 @Service
 public class AlgorithmService {
 
-    public int numberOfArithmeticSlices(int[] nums) {
-        int solve = 0;
-        int from = 0;
-        for (int to = 1; to < nums.length; to++) {
-            while (nums[to] - nums[to - 1] != nums[from + 1] - nums[from]) {
-                from++;
-            }
-            if (to - from >= 2) {
-                solve += (to - from - 1);
-            }
-        }
-        return solve;
-    }
-
-    public int[] topKFrequent(int[] nums, int k) {
-        Map<Integer, Integer> countMap = new LinkedHashMap<>();
-        for (int num : nums) {
-            countMap.put(num, countMap.getOrDefault(num, 0) + 1);
-        }
-        List<int[]> list = new ArrayList<>();
-        for (var key : countMap.keySet()) {
-            list.add(new int[]{key, countMap.get(key)});
-        }
-        Collections.sort(list, (o1, o2) -> o2[1] == o1[1] ? o1[0] - o2[0] : o2[1] - o1[1]);
-        return list.stream().limit(k).map(a -> a[0]).mapToInt(Integer::intValue).toArray();
-    }
-
     public int maxProfit(int[] prices) {
         // [7,1,5,3,6,4]
         // 7
@@ -134,7 +107,6 @@ public class AlgorithmService {
 
 //        String tc = "bcabc";
 //        removeDuplicateLetters(tc);
-
         System.out.println("DONE");
     }
 }

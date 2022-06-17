@@ -1,4 +1,4 @@
 package com.mainlab.service;
 
-public class ProfileService {
+public class LabService {
 }

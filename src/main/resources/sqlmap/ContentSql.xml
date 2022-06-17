@@ -8,6 +8,15 @@
         FROM
             `content`
     </select>
+    <select id="selectContent" parameterType="int" resultType="com.mainlab.model.Content">
+        SELECT
+            `content_id` as `contentId`,
+            `content_type` as `contentType`
+        FROM
+            `content`
+        WHERE
+            `content_id` = #{contentId}
+    </select>
     <select id="selectContentListByContentType" parameterType="map" resultType="com.mainlab.model.Content">
         SELECT
             `content_id` as `contentId`,
@@ -15,6 +24,24 @@
         FROM
             `content`
         WHERE
+            `user_id` = "ADMIN" AND
             `content_type` = #{contentType}
     </select>
+
+    <insert id="insertContent" parameterType="com.mainlab.model.Content" useGeneratedKeys="true">
+        INSERT INTO `content`
+        (
+            `content_type`,
+            `created`,
+            `modified`
+        ) VALUES
+        (
+            #{contentType},
+            NOW(),
+            NOW()
+        )
+        <selectKey keyProperty="contentId" resultType="int">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+    </insert>
 </mapper>
