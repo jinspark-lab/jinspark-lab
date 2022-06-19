@@ -31,6 +31,7 @@ public class ContentRepository extends BaseRdbDaoSupport {
     }
 
     public void insertContent(Content content) {
+        // Auto increment key contentId will be stored to content Object.
         sqlSessionTemplate.insert(getMappedSql("insertContent"), content);
     }
 
