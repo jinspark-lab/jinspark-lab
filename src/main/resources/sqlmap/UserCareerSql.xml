@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserCareerSql">
+    <select id="selectUserCareerList" parameterType="String" resultType="com.mainlab.model.UserCareer">
+        SELECT
+            `career_id` as `careerId`,
+            `user_id` as `userId`,
+            `career_start` as `careerStart`,
+            `career_end` as `careerEnd`,
+            `company` as `company`,
+            `job_title` as `jobTitle`,
+            `description` as `description`
+        FROM
+            `user_career`
+        WHERE
+            `user_id` = #{userId}
+    </select>
+</mapper>

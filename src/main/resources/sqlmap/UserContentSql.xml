@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserContentSql">
+    <select id="selectUserContent" parameterType="String" resultType="com.mainlab.model.UserContent">
+        SELECT
+            `user_id` as `userId`,
+            `algorithm_cnt` as `algorithmCnt`,
+            `architecture_cnt` as `architectureCnt`,
+            `project_cnt` as `projectCnt`
+        FROM
+            `user_content`
+        WHERE
+            `user_id` = #{userId}
+    </select>
+</mapper>
