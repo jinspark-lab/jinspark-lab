@@ -24,7 +24,6 @@
         FROM
             `content`
         WHERE
-            `user_id` = "ADMIN" AND
             `content_type` = #{contentType}
     </select>
 

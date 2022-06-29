@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserSkillSql">
+    <select id="selectUserSkillList" parameterType="String" resultType="com.mainlab.model.UserSkill">
+        SELECT
+            `skill_id` as `skillId`,
+            `user_id` as `userId`,
+            `skill_name` as `skillName`,
+            `experience` as `experience`,
+            `proficiency` as `proficiency`
+        FROM
+            `user_skill`
+        WHERE
+            `user_id` = #{userId}
+    </select>
+</mapper>

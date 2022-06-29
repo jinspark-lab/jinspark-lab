@@ -5,4 +5,12 @@
         <setting name="useGeneratedKeys" value="true" />
         <setting name="defaultExecutorType" value="REUSE"/>
     </settings>
+    <typeAliases>
+        <typeAlias type="org.joda.time.DateTime" alias="dateTime" />
+        <package name="com.mainlab.model"/>
+    </typeAliases>
+    <typeHandlers>
+        <typeHandler handler="com.mainlab.common.DateTimeTypeHandler" javaType="org.joda.time.DateTime" />
+        <package name="com.mainlab"/>
+    </typeHandlers>
 </configuration>
