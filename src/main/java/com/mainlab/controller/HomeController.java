@@ -1,6 +1,7 @@
 package com.mainlab.controller;
 
 import com.mainlab.model.UserContent;
+import com.mainlab.service.ContentService;
 import com.mainlab.service.UserContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
 
     @Autowired
+    private ContentService contentService;
+    @Autowired
     private UserContentService userContentService;
 
     //TODO: Add Login & Authorization process in the queue
@@ -21,6 +24,17 @@ public class HomeController {
     @RequestMapping(value = "/")
     public UserContent showMyAccountPage(@RequestParam("userId") String userId) {
         return userContentService.getUserContent(userId);
+    }
+
+    @RequestMapping(value = "/check")
+    public ResponseEntity<String> checkEnvironment() {
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append(contentService.getContentList());
+            return ResponseEntity.ok().body(sb.toString());
+        } catch(Exception e) {
+            return ResponseEntity.ok().body(e.getMessage());
+        }
     }
 
     @RequestMapping(value = "/health")
