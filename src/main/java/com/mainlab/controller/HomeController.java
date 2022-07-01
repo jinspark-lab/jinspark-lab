@@ -19,9 +19,14 @@ public class HomeController {
     @Autowired
     private UserContentService userContentService;
 
+    @RequestMapping(value = "/")
+    public ResponseEntity<String> home() {
+        return ResponseEntity.ok().body("Hello World");
+    }
+
     //TODO: Add Login & Authorization process in the queue
     @ResponseBody
-    @RequestMapping(value = "/")
+    @RequestMapping(value = "/account")
     public UserContent showMyAccountPage(@RequestParam("userId") String userId) {
         return userContentService.getUserContent(userId);
     }
