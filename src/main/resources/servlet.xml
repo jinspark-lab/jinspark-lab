@@ -26,7 +26,7 @@
     <mvc:cors>
         <mvc:mapping path="/**"
                      allowed-origins="*"
-                     allowed-methods="GET, POST"
+                     allowed-methods="GET, HEAD, OPTIONS, POST"
                      allowed-headers="*"
                      allow-credentials="false"
         />

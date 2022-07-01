@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserLabSql">
+    <select id="selectUserLabList" parameterType="String" resultType="com.mainlab.model.UserLab">
+        SELECT
+            `user_id` as `userId`,
+            `lab_id` as `labId`,
+            `lab_title` as `labTitle`,
+            `picture_url` as `pictureUrl`,
+            `description` as `description`,
+            `link_url` as `linkUrl`
+        FROM
+            `user_lab`
+        WHERE
+            `user_id` = #{userId}
+    </select>
+</mapper>
