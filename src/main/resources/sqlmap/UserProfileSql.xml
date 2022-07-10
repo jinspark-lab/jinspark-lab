@@ -15,14 +15,18 @@
         WHERE
             `user_id` = #{userId}
     </select>
-    <select id="selectUserSkillList" parameterType="String" resultType="com.mainlab.model.UserSkill">
-        SELECT
-            `skill_id` as `skillId`,
-            `user_id` as `userId`,
-            `skill_name` as `skillName`,
-            `experience` as `experience`,
-            `proficiency` as `proficiency`
-        FROM
-            `user_skill`
-    </select>
+    <update id="updateUserProfile" parameterType="com.mainlab.model.UserProfile">
+        UPDATE
+            `user_profile`
+        SET
+            `name` = #{name},
+            `title` = #{title},
+            `picture_url` = #{pictureUrl},
+            `description` = #{description},
+            `linkedin_url` = #{linkedinUrl},
+            `contact_email` = #{contactEmail},
+            `modified` = NOW()
+        WHERE
+            `user_id` = #{userId}
+    </update>
 </mapper>

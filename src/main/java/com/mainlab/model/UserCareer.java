@@ -2,7 +2,9 @@ package com.mainlab.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.mainlab.common.DateTimeDeserializer;
 import com.mainlab.common.DateTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,8 +27,10 @@ public class UserCareer implements Serializable {
     @JsonIgnore
     private String userId;
     @JsonSerialize(using = DateTimeSerializer.class)
+    @JsonDeserialize(using= DateTimeDeserializer.class)
     private DateTime careerStart;
     @JsonSerialize(using = DateTimeSerializer.class)
+    @JsonDeserialize(using = DateTimeDeserializer.class)
     private DateTime careerEnd;
     private String company;
     private String jobTitle;
