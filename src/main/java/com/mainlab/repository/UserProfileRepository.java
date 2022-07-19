@@ -13,4 +13,8 @@ public class UserProfileRepository extends BaseRdbDaoSupport {
     public UserProfile selectUserProfile(String userId) {
         return sqlSessionTemplate.selectOne(getMappedSql("selectUserProfile"), userId);
     }
+
+    public void updateUserProfile(String userId, UserProfile userProfile) {
+        sqlSessionTemplate.update(getMappedSql("updateUserProfile"), userProfile);
+    }
 }

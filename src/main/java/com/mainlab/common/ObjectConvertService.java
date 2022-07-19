@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 public class ObjectConvertService {
     ObjectMapper objectMapper = new ObjectMapper();
 
-    public <T> T stringToObj (String content, Class<T> type) {
-//            String content = "{ \"status\": 200, \"message\": \"jinspark\" }";
-//            MessageModel obj = objectConvertService.stringToObj(content.toString(), MessageModel.class);
-//            System.out.println(obj);
+    public <T> T stringToObj(String content, Class<T> type) {
         try {
             return objectMapper.readValue(content, type);
         } catch (JsonProcessingException e) {

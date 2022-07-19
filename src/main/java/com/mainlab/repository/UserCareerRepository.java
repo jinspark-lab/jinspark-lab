@@ -15,4 +15,21 @@ public class UserCareerRepository extends BaseRdbDaoSupport {
     public List<UserCareer> selectUserCareerList(String userId) {
         return sqlSessionTemplate.selectList(getMappedSql("selectUserCareerList"), userId);
     }
+
+    public void upsertUserCareerList(List<UserCareer> userCareerList) {
+        if (!userCareerList.isEmpty()) {
+            userCareerList.forEach(userCareer -> {
+                sqlSessionTemplate.insert(getMappedSql("upsertUserCareer"), userCareer);
+            });
+            sqlSessionTemplate.flushStatements();
+        }
+    }
+
+    public void deleteUserCareerList(List<UserCareer> userCareerList) {
+        if (!userCareerList.isEmpty()) {
+            userCareerList.forEach(userCareer ->
+                    sqlSessionTemplate.delete(getMappedSql("deleteUserCareer"), userCareer));
+            sqlSessionTemplate.flushStatements();
+        }
+    }
 }

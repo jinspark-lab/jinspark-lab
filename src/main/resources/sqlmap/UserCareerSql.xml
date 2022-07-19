@@ -15,4 +15,43 @@
         WHERE
             `user_id` = #{userId}
     </select>
+    <insert id="upsertUserCareer" parameterType="com.mainlab.model.UserCareer">
+        INSERT INTO
+            `user_career`
+        (
+            `career_id`,
+            `user_id`,
+            `career_start`,
+            `career_end`,
+            `company`,
+            `job_title`,
+            `description`,
+            `created`,
+            `modified`
+        ) VALUES
+        (
+            #{careerId},
+            #{userId},
+            #{careerStart},
+            #{careerEnd},
+            #{company},
+            #{jobTitle},
+            #{description},
+            NOW(),
+            NOW()
+        ) ON DUPLICATE KEY UPDATE
+            `career_start` = #{careerStart},
+            `career_end` = #{careerEnd},
+            `company` = #{company},
+            `job_title` = #{jobTitle},
+            `description` = #{description},
+            `modified` = NOW()
+    </insert>
+    <delete id="deleteUserCareer" parameterType="com.mainlab.model.UserCareer">
+        DELETE FROM
+            `user_career`
+        WHERE
+            `user_id` = #{userId}
+            AND `career_id` = #{careerId}
+    </delete>
 </mapper>

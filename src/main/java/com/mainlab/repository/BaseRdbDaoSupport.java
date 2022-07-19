@@ -13,5 +13,4 @@ public abstract class BaseRdbDaoSupport {
     protected String getMappedSql(String statement) {
         return getNamespace() + "." + statement;
     }
-
 }

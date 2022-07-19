@@ -19,7 +19,16 @@
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
     <!-- EnableWebMVC -->
-    <mvc:annotation-driven />
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+<!--                <property name="objectMapper" ref="com.fasterxml.jackson.databind.ObjectMapper" />-->
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper" />
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
     <!-- Static Resources -->
     <mvc:resources mapping="/**" location="/resources/"/>
     <!-- Cross Origin Resource Sharing -->

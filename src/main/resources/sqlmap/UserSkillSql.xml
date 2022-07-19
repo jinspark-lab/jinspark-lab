@@ -13,4 +13,37 @@
         WHERE
             `user_id` = #{userId}
     </select>
+    <insert id="upsertUserSkill" parameterType="com.mainlab.model.UserSkill">
+        INSERT INTO
+            `user_skill`
+        (
+            `skill_id`,
+            `user_id`,
+            `skill_name`,
+            `experience`,
+            `proficiency`,
+            `created`,
+            `modified`
+        ) VALUES
+        (
+            #{skillId},
+            #{userId},
+            #{skillName},
+            #{experience},
+            #{proficiency},
+            NOW(),
+            NOW()
+        ) ON DUPLICATE KEY UPDATE
+            `skill_name` = #{skillName},
+            `experience` = #{experience},
+            `proficiency` = #{proficiency},
+            `modified` = NOW()
+    </insert>
+    <delete id="deleteUserSkill" parameterType="com.mainlab.model.UserSkill">
+        DELETE FROM
+            `user_skill`
+        WHERE
+            `user_id` = #{userId}
+            AND `skill_id` = #{skillId}
+    </delete>
 </mapper>
