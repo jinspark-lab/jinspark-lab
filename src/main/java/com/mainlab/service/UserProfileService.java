@@ -1,5 +1,7 @@
 package com.mainlab.service;
 
+import com.mainlab.common.OperationService;
+import com.mainlab.common.OperationUnit;
 import com.mainlab.model.UserProfile;
 import com.mainlab.model.UserProfileRequest;
 import com.mainlab.model.UserProfileResponse;
@@ -8,6 +10,7 @@ import com.mainlab.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +26,8 @@ public class UserProfileService {
     private UserCareerService userCareerService;
     @Autowired
     private UserProjectService userProjectService;
+    @Autowired
+    private OperationService operationService;
 
     private UserProfile getUserProfile(String userId) {
         return userProfileRepository.selectUserProfile(userId);
@@ -30,7 +35,7 @@ public class UserProfileService {
 
     private void updateUserProfile(String userId, UserProfile userProfile) {
         userProfile.setUserId(userId);
-        userProfileRepository.updateUserProfile(userProfile);
+        userProfileRepository.updateUserProfile(userId, userProfile);
     }
 
     public UserProfileResponse getCompleteUserProfile(String userId) {
@@ -43,15 +48,19 @@ public class UserProfileService {
         return userProfileResponse;
     }
 
-    public UserProfileResponse getProcessedUserProfile(String userId, UserProfileRequest userProfileRequest) {
-        updateUserProfile(userId, userProfileRequest.getUserProfile());
-        userSkillService.processUpdateUserSkillList(userId, userProfileRequest.getUserSkillList());
-        userCareerService.processUpdateUserCareerList(userId, userProfileRequest.getUserCareerList());
+    // TODO : Make Common Exception Handler
+    public void getProcessedUserProfile(String userId, UserProfileRequest userProfileRequest) {
+        List<OperationUnit> operationUnitList = new LinkedList<>();
+
+        // Flatize Transactional operations in operationUnitList
+        operationUnitList.add(() -> updateUserProfile(userId, userProfileRequest.getUserProfile()));
+        operationUnitList.addAll(userSkillService.processUpdateUserSkillList(userId, userProfileRequest.getUserSkillList()));
+        operationUnitList.addAll(userCareerService.processUpdateUserCareerList(userId, userProfileRequest.getUserCareerList()));
 
         List<UserProject> userProjectList = userProfileRequest.getUserCareerList().stream()
                 .flatMap(userCareer -> userCareer.getUserProjectList().stream()).collect(Collectors.toList());
-        userProjectService.processUpdateUserProjectList(userId, userProjectList);
+        operationUnitList.addAll(userProjectService.processUpdateUserProjectList(userId, userProjectList));
 
-        return getCompleteUserProfile(userId);
+        operationService.operate(userId, operationUnitList);
     }
 }

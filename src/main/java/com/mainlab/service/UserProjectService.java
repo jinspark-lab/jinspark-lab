@@ -1,10 +1,12 @@
 package com.mainlab.service;
 
+import com.mainlab.common.OperationUnit;
 import com.mainlab.model.UserProject;
 import com.mainlab.repository.UserProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,18 +21,18 @@ public class UserProjectService {
         return userProjectRepository.selectUserProjectList(userId);
     }
 
-    public void processUpdateUserProjectList(String userId, List<UserProject> userProjectList) {
-        Map<Integer, UserProject> newUserProjectProjectMap = userProjectList.stream().collect(Collectors.toMap(UserProject::getProjectId, userProject -> userProject));
-        Map<Integer, UserProject> newUserProjectCareerMap = userProjectList.stream().collect(Collectors.toMap(UserProject::getCareerId, userProject -> userProject));
+    public List<OperationUnit> processUpdateUserProjectList(String userId, List<UserProject> userProjectList) {
+        List<OperationUnit> operationUnitList = new LinkedList<>();
 
+        Map<String, UserProject> newUniqueUserProjectMap = userProjectList.stream().collect(Collectors.toMap(UserProject::getUniqueProjectId, userProject -> userProject));
         List<UserProject> oldUserProjectList = getUserProjectList(userId);
         List<UserProject> deletedUserProjectList = oldUserProjectList.stream()
-                .filter(userProject -> !newUserProjectProjectMap.containsKey(userProject.getProjectId())
-                        && !newUserProjectCareerMap.containsKey(userProject.getCareerId()))
+                .filter(userProject -> !newUniqueUserProjectMap.containsKey(userProject.getUniqueProjectId()))
                 .collect(Collectors.toList());
 
-        deleteUserProjectList(deletedUserProjectList);
-        upsertUserProjectList(userProjectList);
+        operationUnitList.add(() -> deleteUserProjectList(deletedUserProjectList));
+        operationUnitList.add(() -> upsertUserProjectList(userProjectList));
+        return operationUnitList;
     }
 
     private void upsertUserProjectList(List<UserProject> userProjectList) {

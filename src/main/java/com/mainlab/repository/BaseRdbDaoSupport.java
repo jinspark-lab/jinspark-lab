@@ -8,9 +8,6 @@ public abstract class BaseRdbDaoSupport {
     @Autowired
     protected SqlSessionTemplate sqlSessionTemplate;
 
-    @Autowired
-    protected SqlSessionTemplate batchSqlSessionTemplate;
-
     protected abstract String getNamespace();
 
     protected String getMappedSql(String statement) {

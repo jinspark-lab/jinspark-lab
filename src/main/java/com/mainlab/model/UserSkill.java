@@ -16,7 +16,6 @@ public class UserSkill implements Serializable {
     private static final long serialVersionUID = 4825842813676618484L;
 
     private int skillId;
-    @JsonIgnore
     private String userId;
     private String skillName;
     private int experience;

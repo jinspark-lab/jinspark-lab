@@ -15,7 +15,6 @@ import java.io.Serializable;
 public class UserProfile implements Serializable {
     private static final long serialVersionUID = 247560237355517096L;
 
-    @JsonIgnore
     private String userId;
     private String name;
     private String title;

@@ -27,7 +27,7 @@
             `job_title`,
             `description`,
             `created`,
-            `modified
+            `modified`
         ) VALUES
         (
             #{careerId},
@@ -44,7 +44,7 @@
             `career_end` = #{careerEnd},
             `company` = #{company},
             `job_title` = #{jobTitle},
-            `description` = #{description}
+            `description` = #{description},
             `modified` = NOW()
     </insert>
     <delete id="deleteUserCareer" parameterType="com.mainlab.model.UserCareer">

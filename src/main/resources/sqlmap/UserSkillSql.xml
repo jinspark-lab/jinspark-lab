@@ -34,9 +34,9 @@
             NOW(),
             NOW()
         ) ON DUPLICATE KEY UPDATE
-            `skill_name` = VALUES(`skill_name`),
-            `experience` = VALUES(`experience`),
-            `proficiency` = VALUES(`proficiency`),
+            `skill_name` = #{skillName},
+            `experience` = #{experience},
+            `proficiency` = #{proficiency},
             `modified` = NOW()
     </insert>
     <delete id="deleteUserSkill" parameterType="com.mainlab.model.UserSkill">

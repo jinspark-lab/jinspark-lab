@@ -17,16 +17,20 @@ public class UserProjectRepository extends BaseRdbDaoSupport {
     }
 
     public void upsertUserProjectList(List<UserProject> userProjectList) {
-        userProjectList.forEach(userProject -> {
-            batchSqlSessionTemplate.insert(getMappedSql("upsertUserProject"), userProject);
-        });
-        batchSqlSessionTemplate.flushStatements();
+        if (!userProjectList.isEmpty()) {
+            userProjectList.forEach(userProject -> {
+                sqlSessionTemplate.insert(getMappedSql("upsertUserProject"), userProject);
+            });
+            sqlSessionTemplate.flushStatements();
+        }
     }
 
     public void deleteUserProjectList(List<UserProject> userProjectList) {
-        userProjectList.forEach(userProject -> {
-            batchSqlSessionTemplate.delete(getMappedSql("deleteUserProject"), userProject);
-        });
-        batchSqlSessionTemplate.flushStatements();
+        if (!userProjectList.isEmpty()) {
+            userProjectList.forEach(userProject -> {
+                sqlSessionTemplate.delete(getMappedSql("deleteUserProject"), userProject);
+            });
+            sqlSessionTemplate.flushStatements();
+        }
     }
 }

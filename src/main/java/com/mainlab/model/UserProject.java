@@ -16,10 +16,13 @@ public class UserProject implements Serializable {
     private static final long serialVersionUID = 4711464642341895795L;
 
     private int projectId;
-    @JsonIgnore
     private int careerId;
-    @JsonIgnore
     private String userId;
     private int projectOrder;
     private String description;
+
+    @JsonIgnore
+    public String getUniqueProjectId() {
+        return careerId + ":" + projectId;
+    }
 }

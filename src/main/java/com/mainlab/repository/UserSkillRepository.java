@@ -17,16 +17,20 @@ public class UserSkillRepository extends BaseRdbDaoSupport {
     }
 
     public void upsertUserSkillList(List<UserSkill> userSkillList) {
-        userSkillList.forEach(userSkill -> {
-            batchSqlSessionTemplate.insert(getMappedSql("upsertUserSkill"), userSkill);
-        });
-        batchSqlSessionTemplate.flushStatements();
+        if (!userSkillList.isEmpty()) {
+            userSkillList.forEach(userSkill -> {
+                sqlSessionTemplate.insert(getMappedSql("upsertUserSkill"), userSkill);
+            });
+            sqlSessionTemplate.flushStatements();
+        }
     }
 
     public void deleteUserSkillList(List<UserSkill> userSkillList) {
-        userSkillList.forEach(userSkill -> {
-            batchSqlSessionTemplate.delete(getMappedSql("deleteUserSkill"), userSkill);
-        });
-        batchSqlSessionTemplate.flushStatements();
+        if (!userSkillList.isEmpty()) {
+            userSkillList.forEach(userSkill -> {
+                sqlSessionTemplate.delete(getMappedSql("deleteUserSkill"), userSkill);
+            });
+            sqlSessionTemplate.flushStatements();
+        }
     }
 }

@@ -9,18 +9,19 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class DateTimeSerializer extends JsonSerializer<DateTime> {
 
     @Setter
-    private DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+    private DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 
     @Override
     public void serialize(DateTime dateTime, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         if (dateTime == null || formatter == null || jsonGenerator == null) {
             System.out.println(dateTime);
         }
-        jsonGenerator.writeString(formatter.print(dateTime));
+        Objects.requireNonNull(jsonGenerator).writeString(formatter.print(dateTime));
     }
 
     @Override

@@ -24,7 +24,6 @@ public class UserCareer implements Serializable {
     private static final long serialVersionUID = -589415825044635602L;
 
     private int careerId;
-    @JsonIgnore
     private String userId;
     @JsonSerialize(using = DateTimeSerializer.class)
     @JsonDeserialize(using= DateTimeDeserializer.class)
