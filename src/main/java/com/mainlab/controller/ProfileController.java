@@ -2,14 +2,14 @@ package com.mainlab.controller;
 
 import com.mainlab.model.UserProfileRequest;
 import com.mainlab.model.UserProfileResponse;
+import com.mainlab.model.response.SuccessResponse;
 import com.mainlab.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/profile")
-public class ProfileController {
+public class ProfileController extends BaseController {
 
     @Autowired
     private UserProfileService userProfileService;
@@ -24,8 +24,8 @@ public class ProfileController {
     // TODO: Design Common RequestBody include user information. Using ThreadLocal
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity updateAndGetUserProfile(@RequestBody UserProfileRequest userProfileRequest) {
+    public SuccessResponse updateAndGetUserProfile(@RequestBody UserProfileRequest userProfileRequest) {
         userProfileService.getProcessedUserProfile("admin", userProfileRequest);
-        return ResponseEntity.ok().build();
+        return new SuccessResponse();
     }
 }
