@@ -13,7 +13,8 @@
         <maven.compiler.source>12</maven.compiler.source>
         <maven.compiler.target>12</maven.compiler.target>
         <java.version>11</java.version>
-        <org.springframework-version>5.2.10.RELEASE</org.springframework-version>
+        <org.springframework-version>5.2.22.RELEASE</org.springframework-version>
+        <org.spring-security-version>5.2.15.RELEASE</org.spring-security-version>
     </properties>
 
     <profiles>
@@ -61,12 +62,12 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>${org.springframework-version}</version>
+            <version>${org.spring-security-version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>${org.springframework-version}</version>
+            <version>${org.spring-security-version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -116,6 +117,20 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>2.0.0.Final</version>
+        </dependency>
+
+        <!-- Test Frameworks   -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${org.springframework-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Guava -->
