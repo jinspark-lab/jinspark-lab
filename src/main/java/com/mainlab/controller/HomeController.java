@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "")
-public class HomeController {
+public class HomeController extends BaseController {
 
     @Autowired
     private ContentService contentService;
