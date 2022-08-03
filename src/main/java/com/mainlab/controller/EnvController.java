@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/***
+ * EnvController is for Internal Usages (System Check & Health Ping & Dev & Testing), and should not be exposed from public URL.
+ */
 @RestController
 @RequestMapping(value = "")
-public class HomeController extends BaseController {
+public class EnvController extends BaseController {
 
     @Autowired
     private ContentService contentService;
@@ -24,7 +27,6 @@ public class HomeController extends BaseController {
         return ResponseEntity.ok().body("Hello World");
     }
 
-    //TODO: Add Login & Authorization process in the queue
     @ResponseBody
     @RequestMapping(value = "/account")
     public UserContent showMyAccountPage(@RequestParam("userId") String userId) {
