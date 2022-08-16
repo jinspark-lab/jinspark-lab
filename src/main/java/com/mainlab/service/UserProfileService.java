@@ -48,7 +48,6 @@ public class UserProfileService {
         return userProfileResponse;
     }
 
-    // TODO : Make Common Exception Handler
     public void getProcessedUserProfile(String userId, UserProfileRequest userProfileRequest) {
         List<OperationUnit> operationUnitList = new LinkedList<>();
 
