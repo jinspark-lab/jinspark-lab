@@ -1,4 +1,4 @@
-package com.mainlab.model;
+package com.mainlab.model.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +11,8 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable {
-    private static final long serialVersionUID = 3792167029375600814L;
+public class JwtRequest implements Serializable {
+    private static final long serialVersionUID = -6994602207245833739L;
 
-    private String userId;
+    private String credential;
 }

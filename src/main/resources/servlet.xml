@@ -37,9 +37,17 @@
                      allowed-origins="*"
                      allowed-methods="GET, HEAD, OPTIONS, POST"
                      allowed-headers="*"
-                     allow-credentials="false"
+                     exposed-headers="*"
+                     allow-credentials="true"
         />
     </mvc:cors>
+    <!--  Spring Interceptors  -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/api/**"/>
+            <bean class="com.mainlab.interceptor.AuthorizationInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
 
     <security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled" proxy-target-class="true" />
 </beans>

@@ -21,9 +21,11 @@ public enum ErrorCode {
 
     // 500 INTERNAL_ERROR
     INTERNAL_ERROR(500),
-    ;
+
 
     // 1001+ Custom ErrorCode
+    AUTH_OVERDUE(1001),
+    ;
 
     int code;
 

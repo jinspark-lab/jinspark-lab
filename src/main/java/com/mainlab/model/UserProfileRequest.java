@@ -15,6 +15,7 @@ import java.util.List;
 public class UserProfileRequest implements Serializable {
     private static final long serialVersionUID = 636365245445632087L;
 
+    private String userId;
     private UserProfile userProfile;
     private List<UserSkill> userSkillList;
     private List<UserCareer> userCareerList;

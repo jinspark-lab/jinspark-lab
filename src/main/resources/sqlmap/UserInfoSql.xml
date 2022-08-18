@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserInfoSql">
+    <select id="selectUserInfo" parameterType="String" resultType="com.mainlab.model.UserInfo">
+        SELECT
+            `user_id` as `userId`,
+            `refresh_token` as `refreshToken`,
+            `shard_id` as `shardId`,
+            `last_login` as `lastLogin`
+        FROM
+            `user_info`
+        WHERE
+            `user_id` = #{userId}
+    </select>
+    <select id="selectUserInfoByRefreshToken" parameterType="String" resultType="com.mainlab.model.UserInfo">
+        SELECT
+            `user_id` as `userId`,
+            `refresh_token` as `refreshToken`,
+            `shard_id` as `shardId`,
+            `last_login` as `lastLogin`
+        FROM
+            `user_info`
+        WHERE
+            `refresh_token` = #{refreshToken}
+    </select>
+    <insert id="insertUserInfo" parameterType="com.mainlab.model.UserInfo">
+        INSERT INTO
+            `user_info`
+        (
+            `user_id`,
+            `refresh_token`,
+            `shard_id`,
+            `last_login`,
+            `created`,
+            `modified`
+        ) VALUES
+        (
+            #{userId},
+            #{refreshToken},
+            #{shardId},
+            NOW(),
+            NOW(),
+            NOW()
+        )
+    </insert>
+    <update id="updateUserInfo" parameterType="com.mainlab.model.UserInfo">
+        UPDATE
+            `user_info`
+        SET
+            `user_id` = #{userId},
+            `refresh_token` = #{refreshToken},
+            `shard_id` = #{shardId},
+            `last_login` = NOW(),
+            `modified` = NOW()
+        WHERE
+            `user_id` = #{userId}
+    </update>
+</mapper>

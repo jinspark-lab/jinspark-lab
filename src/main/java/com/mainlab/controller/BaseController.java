@@ -1,14 +1,13 @@
 package com.mainlab.controller;
 
+import com.mainlab.model.exception.AuthorizationException;
 import com.mainlab.model.exception.BaseRuntimeException;
 import com.mainlab.model.exception.ErrorCode;
 import com.mainlab.model.response.FailureResponse;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 public abstract class BaseController {
 
@@ -21,7 +20,7 @@ public abstract class BaseController {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler({AccessDeniedException.class})
+    @ExceptionHandler({AccessDeniedException.class, AuthorizationException.class})
     public FailureResponse accessDeniedException(AccessDeniedException e) {
         return new FailureResponse(ErrorCode.UNAUTHORIZED.getCode(), e.getMessage(), DateTime.now().getMillis());
     }
