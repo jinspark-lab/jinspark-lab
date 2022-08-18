@@ -7,11 +7,9 @@ import com.mainlab.model.login.JwtResponse;
 import com.mainlab.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
@@ -30,10 +28,8 @@ public class AuthController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/refresh", method = RequestMethod.POST)
-    public JwtResponse refreshToken(HttpServletRequest request) {
-        // Generate new Access Token
-        String refreshToken = Arrays.stream(request.getCookies()).filter(cookie -> cookie.getName().equals("token")).findFirst()
-                .orElseThrow(() -> new AuthorizationException("Invalid Refresh Token Requests", ErrorCode.UNAUTHORIZED)).getValue();
+    public JwtResponse refreshToken(@CookieValue("refreshToken") String refreshToken) {
+        // Generate Access token, and update Refresh token if it is expired.
         return authService.refreshUserAccess(refreshToken);
     }
 }

@@ -22,4 +22,9 @@ public class UserInfoRepository extends BaseRdbDaoSupport {
         sqlSessionTemplate.insert(getMappedSql("insertUserInfo"), new UserInfo(userId, refreshToken));
         sqlSessionTemplate.flushStatements();
     }
+
+    public void updateUserInfo(String userId, String refreshToken) {
+        sqlSessionTemplate.update(getMappedSql("updateUserInfo"), new UserInfo(userId, refreshToken));
+        sqlSessionTemplate.flushStatements();
+    }
 }

@@ -59,11 +59,17 @@ public class AuthService {
             if (payload.getEmailVerified()) {
                 UserInfo userInfo = userService.loadUserInfo(payload.getEmail());
                 if (Optional.ofNullable(userInfo).isPresent()) {
+
+                    //If refresh Token is expired, need to refresh "Refresh token".
+                    if (isExpired(userInfo.getRefreshToken())) {
+                        String refreshToken = generateRefreshToken(payload.getEmail(), userInfo.getRoleTypeList());
+                        userService.updateRefreshToken(userInfo.getUserId(), refreshToken);
+                        userInfo = userService.loadUserInfo(userInfo.getUserId());
+                    }
                     String accessToken = generateAccessToken(userInfo);
                     token = new UserToken(accessToken, userInfo.getRefreshToken());
                 } else {
-                    String refreshToken = generateRefreshToken(payload.getEmail(), List.of(RoleType.GUEST));
-                    UserInfo newUserInfo = userService.createAndGetUserInfo(payload.getEmail(), refreshToken);
+                    UserInfo newUserInfo = registerNewUser(payload.getEmail());
                     String accessToken = generateAccessToken(newUserInfo);
                     token = new UserToken(accessToken, newUserInfo.getRefreshToken());
                 }
@@ -77,18 +83,27 @@ public class AuthService {
         throw new BaseRuntimeException("Unable to login via Google.", ErrorCode.UNAUTHORIZED);
     }
 
+    public UserInfo registerNewUser(String email) {
+        String refreshToken = generateRefreshToken(email, List.of(RoleType.GUEST));
+        return userService.createAndGetUserInfo(email, refreshToken);
+    }
+
     public JwtResponse refreshUserAccess(String refreshToken) {
         UserInfo userInfo = userService.loadUserInfoByToken(refreshToken);
-        DecodedJWT jwt = decodeJWT(userInfo.getRefreshToken());
 
-        if (!verifyExpiration(jwt)) {
+        try {
+            DecodedJWT jwt = decodeJWT(userInfo.getRefreshToken());
+            if (!isExpired(jwt)) {
+                String newAccessToken = generateAccessToken(userInfo);
+                return new JwtResponse(new UserToken(newAccessToken, userInfo.getRefreshToken()));
+            }
+            throw new BaseRuntimeException("Unexpected JWT error", ErrorCode.INTERNAL_ERROR);
+        } catch (TokenExpiredException e) {
+            System.out.println(e.getMessage());
             String newRefreshToken = generateRefreshToken(userInfo.getUserId(), userInfo.getRoleTypeList());
             userService.updateRefreshToken(userInfo.getUserId(), newRefreshToken);
             String newAccessToken = generateAccessToken(userService.loadUserInfo(userInfo.getUserId()));
             return new JwtResponse(new UserToken(newAccessToken, newRefreshToken));
-        } else {
-            String newAccessToken = generateAccessToken(userInfo);
-            return new JwtResponse(new UserToken(newAccessToken, userInfo.getRefreshToken()));
         }
     }
 
@@ -101,7 +116,7 @@ public class AuthService {
                 .withClaim("userId", userInfo.getUserId())
                 .withClaim("role", userInfo.getRoleTypeList().stream().map(RoleType::toString).collect(Collectors.toList()))
                 .withIssuedAt(new Date(issued.getMillis()))
-                .withExpiresAt(new Date(issued.plusMinutes(10).getMillis()))
+                .withExpiresAt(new Date(issued.plusMinutes(1).getMillis()))
                 .withIssuer(authIssuer)
                 .sign(algorithm);
     }
@@ -116,6 +131,7 @@ public class AuthService {
                 .withClaim("role", roleTypeList.stream().map(RoleType::toString).collect(Collectors.toList()))
                 .withIssuedAt(new Date(issued.getMillis()))
                 .withExpiresAt(new Date(issued.plusMinutes(60).getMillis()))
+                .withIssuer(authIssuer)
                 .sign(algorithm);
     }
 
@@ -123,13 +139,13 @@ public class AuthService {
         try {
             DecodedJWT jwt = decodeJWT(token);
             // Need to decode JWT.
-            if (jwt.getIssuer().equals(authIssuer) && verifyExpiration(jwt)) {
+            if (jwt.getIssuer().equals(authIssuer) && !isExpired(jwt)) {
                 String userId = jwt.getClaim("userId").asString();
                 return userService.loadUserInfo(userId);
             }
             throw new AuthorizationException("Issuer Failed to check. ", ErrorCode.UNAUTHORIZED);
         } catch (TokenExpiredException e) {
-            throw new AuthorizationException("Token has been Expired. ", ErrorCode.UNAUTHORIZED);
+            throw new AuthorizationException("Access Token has been Expired. ", ErrorCode.UNAUTHORIZED);
         } catch (Exception e) {
             throw new AuthorizationException(e.getMessage(), ErrorCode.UNAUTHORIZED);
         }
@@ -140,13 +156,20 @@ public class AuthService {
      * @param jwt
      * @return
      */
-    private boolean verifyExpiration(DecodedJWT jwt) {
-        // JWT handles time as second, so it is necessary to compare it with second, not millisecond.
-        long nowSecond = DateTime.now().getMillis();
-        return jwt.getIssuedAt().getTime() < nowSecond && nowSecond < jwt.getExpiresAt().getTime();
+    public boolean isExpired(DecodedJWT jwt) {
+        long now = DateTime.now().getMillis();
+        return !(jwt.getIssuedAt().getTime() < now && now < jwt.getExpiresAt().getTime());
     }
 
-    private DecodedJWT decodeJWT(String token) {
+    public boolean isExpired(String token) {
+        try {
+            return isExpired(decodeJWT(token));
+        } catch (TokenExpiredException e) {
+            return true;
+        }
+    }
+
+    private DecodedJWT decodeJWT(String token) throws TokenExpiredException {
         Algorithm algorithm = Algorithm.HMAC256(authSecret);
         JWTVerifier verifier = JWT.require(algorithm)
                 .withIssuer(authIssuer)

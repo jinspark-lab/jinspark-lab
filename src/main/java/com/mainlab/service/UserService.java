@@ -10,10 +10,13 @@ import com.mainlab.model.UserRole;
 import com.mainlab.repository.UserInfoRepository;
 import com.mainlab.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -50,6 +53,20 @@ public class UserService {
     }
 
     public void updateRefreshToken(String userId, String refreshToken) {
+        List<OperationUnit> operationUnitList = Lists.newArrayList();
+        operationUnitList.add(() -> userInfoRepository.updateUserInfo(userId, refreshToken));
+        operationService.operate(userId, operationUnitList);
+    }
 
+    public UserInfo getUserContextHolder() {
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return loadUserInfo(principal);
+    }
+
+    public void setUserContextHolder(UserInfo userInfo) {
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                userInfo.getUserId(),
+                userInfo.getRefreshToken(),
+                userInfo.getRoleTypeList().stream().map(RoleType::toAuthority).collect(Collectors.toList())));
     }
 }

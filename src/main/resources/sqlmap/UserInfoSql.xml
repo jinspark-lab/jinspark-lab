@@ -12,6 +12,17 @@
         WHERE
             `user_id` = #{userId}
     </select>
+    <select id="selectUserInfoByRefreshToken" parameterType="String" resultType="com.mainlab.model.UserInfo">
+        SELECT
+            `user_id` as `userId`,
+            `refresh_token` as `refreshToken`,
+            `shard_id` as `shardId`,
+            `last_login` as `lastLogin`
+        FROM
+            `user_info`
+        WHERE
+            `refresh_token` = #{refreshToken}
+    </select>
     <insert id="insertUserInfo" parameterType="com.mainlab.model.UserInfo">
         INSERT INTO
             `user_info`
@@ -32,4 +43,16 @@
             NOW()
         )
     </insert>
+    <update id="updateUserInfo" parameterType="com.mainlab.model.UserInfo">
+        UPDATE
+            `user_info`
+        SET
+            `user_id` = #{userId},
+            `refresh_token` = #{refreshToken},
+            `shard_id` = #{shardId},
+            `last_login` = NOW(),
+            `modified` = NOW()
+        WHERE
+            `user_id` = #{userId}
+    </update>
 </mapper>
