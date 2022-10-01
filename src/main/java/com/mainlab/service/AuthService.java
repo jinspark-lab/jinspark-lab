@@ -11,11 +11,14 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.common.collect.ImmutableList;
+import com.mainlab.common.ObjectConvertService;
 import com.mainlab.model.RoleType;
 import com.mainlab.model.UserInfo;
 import com.mainlab.model.exception.AuthorizationException;
 import com.mainlab.model.exception.BaseRuntimeException;
 import com.mainlab.model.exception.ErrorCode;
+import com.mainlab.model.login.AuthEnvironmentModel;
 import com.mainlab.model.login.JwtResponse;
 import com.mainlab.model.login.UserToken;
 import org.joda.time.DateTime;
@@ -44,11 +47,35 @@ public class AuthService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EnvironmentService environmentService;
+
+    @Autowired
+    private ObjectConvertService objectConvertService;
+
+    private String getAuthIssuer() {
+        if (Optional.ofNullable(authIssuer).isPresent() && !authIssuer.equals("") && !authIssuer.equals(".")) {
+            return authIssuer;
+        }
+        String authInfo = environmentService.getStringValue("jinsparklab/app-auth");
+        AuthEnvironmentModel authEnvironmentModel = objectConvertService.stringToObj(authInfo, AuthEnvironmentModel.class);
+        return authEnvironmentModel.getIssuer();
+    }
+
+    private String getAuthSecret() {
+        if (Optional.ofNullable(authSecret).isPresent() && !authSecret.equals("") && !authSecret.equals(".")) {
+            return authSecret;
+        }
+        String authInfo = environmentService.getStringValue("jinsparklab/app-auth");
+        AuthEnvironmentModel authEnvironmentModel = objectConvertService.stringToObj(authInfo, AuthEnvironmentModel.class);
+        return authEnvironmentModel.getSecret();
+    }
+
     public JwtResponse loginGoogle(String credential) {
         HttpTransport transport = new NetHttpTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-                .setAudience(List.of(googleClientId))
+                .setAudience(ImmutableList.of(googleClientId))
                 .build();
         GoogleIdToken idToken = null;
         UserToken token = null;
@@ -84,7 +111,7 @@ public class AuthService {
     }
 
     public UserInfo registerNewUser(String email) {
-        String refreshToken = generateRefreshToken(email, List.of(RoleType.GUEST));
+        String refreshToken = generateRefreshToken(email, ImmutableList.of(RoleType.GUEST));
         return userService.createAndGetUserInfo(email, refreshToken);
     }
 
@@ -108,7 +135,7 @@ public class AuthService {
     }
 
     private String generateAccessToken(UserInfo userInfo) {
-        Algorithm algorithm = Algorithm.HMAC256(authSecret);
+        Algorithm algorithm = Algorithm.HMAC256(getAuthSecret());
         DateTime issued = DateTime.now();
 
         return JWT.create()
@@ -117,12 +144,12 @@ public class AuthService {
                 .withClaim("role", userInfo.getRoleTypeList().stream().map(RoleType::toString).collect(Collectors.toList()))
                 .withIssuedAt(new Date(issued.getMillis()))
                 .withExpiresAt(new Date(issued.plusMinutes(1).getMillis()))
-                .withIssuer(authIssuer)
+                .withIssuer(getAuthIssuer())
                 .sign(algorithm);
     }
 
     private String generateRefreshToken(String userId, List<RoleType> roleTypeList) {
-        Algorithm algorithm = Algorithm.HMAC256(authSecret);
+        Algorithm algorithm = Algorithm.HMAC256(getAuthSecret());
         DateTime issued = DateTime.now();
 
         return JWT.create()
@@ -131,7 +158,7 @@ public class AuthService {
                 .withClaim("role", roleTypeList.stream().map(RoleType::toString).collect(Collectors.toList()))
                 .withIssuedAt(new Date(issued.getMillis()))
                 .withExpiresAt(new Date(issued.plusMinutes(60).getMillis()))
-                .withIssuer(authIssuer)
+                .withIssuer(getAuthIssuer())
                 .sign(algorithm);
     }
 
@@ -139,7 +166,7 @@ public class AuthService {
         try {
             DecodedJWT jwt = decodeJWT(token);
             // Need to decode JWT.
-            if (jwt.getIssuer().equals(authIssuer) && !isExpired(jwt)) {
+            if (jwt.getIssuer().equals(getAuthIssuer()) && !isExpired(jwt)) {
                 String userId = jwt.getClaim("userId").asString();
                 return userService.loadUserInfo(userId);
             }
@@ -170,9 +197,9 @@ public class AuthService {
     }
 
     private DecodedJWT decodeJWT(String token) throws TokenExpiredException {
-        Algorithm algorithm = Algorithm.HMAC256(authSecret);
+        Algorithm algorithm = Algorithm.HMAC256(getAuthSecret());
         JWTVerifier verifier = JWT.require(algorithm)
-                .withIssuer(authIssuer)
+                .withIssuer(getAuthIssuer())
                 .build();
         return verifier.verify(token);
     }

@@ -20,7 +20,6 @@ public class ProfileController extends BaseController {
         return userProfileService.getCompleteUserProfile(userProfileRequest.getUserId());
     }
 
-    // TODO: Design Common RequestBody include user information. Using ThreadLocal
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public SuccessResponse updateAndGetUserProfile(@RequestBody UserProfileRequest userProfileRequest) {
