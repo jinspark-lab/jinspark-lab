@@ -24,6 +24,9 @@ public class EnvironmentService {
                 .secretId(secretName)
                 .build();
         GetSecretValueResponse secretValueResponse = secretsManagerClient.getSecretValue(valueRequest);
-        return secretValueResponse.secretString();
+        String result = secretValueResponse.secretString();
+        secretsManagerClient.close();
+        //TODO: Add SecretsManagerException Handling
+        return result;
     }
 }

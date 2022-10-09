@@ -29,6 +29,7 @@ public abstract class BaseController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RuntimeException.class)
     public FailureResponse runtimeException(RuntimeException e) {
-        return new FailureResponse(ErrorCode.INTERNAL_ERROR.getCode(), "", DateTime.now().getMillis());
+        //FIXME: Hide Error Message in Detail
+        return new FailureResponse(ErrorCode.INTERNAL_ERROR.getCode(), e.getMessage(), DateTime.now().getMillis());
     }
 }
