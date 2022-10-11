@@ -54,24 +54,21 @@ public class AuthService {
     private ObjectConvertService objectConvertService;
 
     private String getAuthIssuer() {
-        // FIXME : Add Log and debug what happened. (CORS error)
         if (Optional.ofNullable(authIssuer).isPresent() && !authIssuer.equals("") && !authIssuer.equals(".")) {
             return authIssuer;
         }
-        return "jinsparklab";
-//        String authInfo = environmentService.getStringValue("jinsparklab/app-auth");
-//        AuthEnvironmentModel authEnvironmentModel = objectConvertService.stringToObj(authInfo, AuthEnvironmentModel.class);
-//        return authEnvironmentModel.getIssuer();
+        String authInfo = environmentService.getStringValue("jinsparklab/app-auth");
+        AuthEnvironmentModel authEnvironmentModel = objectConvertService.stringToObj(authInfo, AuthEnvironmentModel.class);
+        return authEnvironmentModel.getIssuer();
     }
 
     private String getAuthSecret() {
         if (Optional.ofNullable(authSecret).isPresent() && !authSecret.equals("") && !authSecret.equals(".")) {
             return authSecret;
         }
-        return "secretkey";
-//        String authInfo = environmentService.getStringValue("jinsparklab/app-auth");
-//        AuthEnvironmentModel authEnvironmentModel = objectConvertService.stringToObj(authInfo, AuthEnvironmentModel.class);
-//        return authEnvironmentModel.getSecret();
+        String authInfo = environmentService.getStringValue("jinsparklab/app-auth");
+        AuthEnvironmentModel authEnvironmentModel = objectConvertService.stringToObj(authInfo, AuthEnvironmentModel.class);
+        return authEnvironmentModel.getSecret();
     }
 
     public JwtResponse loginGoogle(String credential) {
