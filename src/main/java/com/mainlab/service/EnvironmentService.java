@@ -1,7 +1,6 @@
 package com.mainlab.service;
 
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
@@ -16,9 +15,10 @@ public class EnvironmentService {
 
     // TODO: Set EhCache as per Key
     public String getStringValue(String secretName) {
+        // Get Credential from default credential
+        // https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html
         SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
                 .region(getServiceRegion())
-                .credentialsProvider(ProfileCredentialsProvider.create())           //Get Credentials from Environment Profile
                 .build();
         GetSecretValueRequest valueRequest = GetSecretValueRequest.builder()
                 .secretId(secretName)
