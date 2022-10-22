@@ -16,14 +16,14 @@ public class ProfileController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public UserProfileResponse getUserProfile(@RequestBody UserProfileRequest userProfileRequest) {
-        return userProfileService.getCompleteUserProfile(userProfileRequest.getUserId());
+    public UserProfileResponse getUserProfile() {
+        return userProfileService.getCompleteUserProfile();
     }
 
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public SuccessResponse updateAndGetUserProfile(@RequestBody UserProfileRequest userProfileRequest) {
-        userProfileService.getProcessedUserProfile(userProfileRequest.getUserId(), userProfileRequest);
+        userProfileService.getProcessedUserProfile(userProfileRequest);
         return new SuccessResponse();
     }
 }

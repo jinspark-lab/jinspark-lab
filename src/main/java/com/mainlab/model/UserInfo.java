@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,11 @@ public class UserInfo implements Serializable {
 
     public List<RoleType> getRoleTypeList() {
         return userRoleList.stream().map(UserRole::getRoleType).collect(Collectors.toList());
+    }
+
+    @JsonIgnore
+    public RoleType getUserLevel() {
+        return getRoleTypeList().stream().min(Comparator.comparingInt(RoleType::getLevel)).orElse(RoleType.GUEST);
     }
 
     public UserInfo(String userId, String refreshToken) {
