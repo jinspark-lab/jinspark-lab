@@ -25,6 +25,9 @@ public enum ErrorCode {
 
     // 1001+ Custom ErrorCode
     AUTH_OVERDUE(1001),
+    MALFORMED_REQUEST(1002),
+
+    NOT_SUPPORTED(9001),
     ;
 
     int code;

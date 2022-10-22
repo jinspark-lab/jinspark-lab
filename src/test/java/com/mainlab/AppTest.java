@@ -22,7 +22,7 @@ public class AppTest {
 
     @Test
     public void testApp() {
-        UserProfileResponse userProfileResponse = userProfileService.getCompleteUserProfile("admin");
-        assertEquals("admin", userProfileResponse.getUserProfile().getUserId());
+        UserProfileResponse userProfileResponse = userProfileService.getTestUserProfile();
+        assertEquals("jinsangp@gmail.com", userProfileResponse.getUserProfile().getUserId());
     }
 }

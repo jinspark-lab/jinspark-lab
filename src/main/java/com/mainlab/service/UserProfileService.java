@@ -1,13 +1,15 @@
 package com.mainlab.service;
 
 import com.mainlab.common.OperationService;
+import com.mainlab.common.OperationType;
 import com.mainlab.common.OperationUnit;
-import com.mainlab.model.UserProfile;
-import com.mainlab.model.UserProfileRequest;
-import com.mainlab.model.UserProfileResponse;
-import com.mainlab.model.UserProject;
+import com.mainlab.model.*;
+import com.mainlab.model.exception.ErrorCode;
+import com.mainlab.model.exception.ErrorCodes;
+import com.mainlab.model.exception.MalformedRequestException;
 import com.mainlab.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -20,6 +22,8 @@ public class UserProfileService {
 
     @Autowired
     private UserProfileRepository userProfileRepository;
+    @Autowired
+    private UserService userService;
     @Autowired
     private UserSkillService userSkillService;
     @Autowired
@@ -38,8 +42,9 @@ public class UserProfileService {
         userProfileRepository.updateUserProfile(userId, userProfile);
     }
 
-    public UserProfileResponse getCompleteUserProfile(String userId) {
+    public UserProfileResponse getTestUserProfile() {
         UserProfileResponse userProfileResponse = new UserProfileResponse();
+        String userId = "jinsangp@gmail.com";
         Optional.of(getUserProfile(userId)).ifPresent(userProfile -> {
             userProfileResponse.setUserProfile(userProfile);
             userProfileResponse.setUserSkillList(userSkillService.getUserSkillList(userId));
@@ -48,18 +53,31 @@ public class UserProfileService {
         return userProfileResponse;
     }
 
-    public void getProcessedUserProfile(String userId, UserProfileRequest userProfileRequest) {
+    public UserProfileResponse getCompleteUserProfile() {
+        UserProfileResponse userProfileResponse = new UserProfileResponse();
+        String queryUserId = userService.getOperationUserId(OperationType.READ);
+
+        Optional.of(getUserProfile(queryUserId)).ifPresent(userProfile -> {
+            userProfileResponse.setUserProfile(userProfile);
+            userProfileResponse.setUserSkillList(userSkillService.getUserSkillList(queryUserId));
+            userProfileResponse.setUserCareerList(userCareerService.getCompleteUserCareerList(queryUserId));
+        });
+        return userProfileResponse;
+    }
+
+    public void getProcessedUserProfile(UserProfileRequest userProfileRequest) {
         List<OperationUnit> operationUnitList = new LinkedList<>();
+        String queryUserId = userService.getOperationUserId(OperationType.WRITE);
 
         // Flatize Transactional operations in operationUnitList
-        operationUnitList.add(() -> updateUserProfile(userId, userProfileRequest.getUserProfile()));
-        operationUnitList.addAll(userSkillService.processUpdateUserSkillList(userId, userProfileRequest.getUserSkillList()));
-        operationUnitList.addAll(userCareerService.processUpdateUserCareerList(userId, userProfileRequest.getUserCareerList()));
+        operationUnitList.add(() -> updateUserProfile(queryUserId, userProfileRequest.getUserProfile()));
+        operationUnitList.addAll(userSkillService.processUpdateUserSkillList(queryUserId, userProfileRequest.getUserSkillList()));
+        operationUnitList.addAll(userCareerService.processUpdateUserCareerList(queryUserId, userProfileRequest.getUserCareerList()));
 
         List<UserProject> userProjectList = userProfileRequest.getUserCareerList().stream()
                 .flatMap(userCareer -> userCareer.getUserProjectList().stream()).collect(Collectors.toList());
-        operationUnitList.addAll(userProjectService.processUpdateUserProjectList(userId, userProjectList));
+        operationUnitList.addAll(userProjectService.processUpdateUserProjectList(queryUserId, userProjectList));
 
-        operationService.operate(userId, operationUnitList);
+        operationService.operate(queryUserId, operationUnitList);
     }
 }

@@ -9,12 +9,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @NoArgsConstructor
 @AllArgsConstructor
 public enum RoleType {
-    ADMIN("ADMIN"),
-    HOST("HOST"),
-    GUEST("GUEST"),
+    ADMIN("ADMIN", 0),
+    HOST("HOST", 1),
+    GUEST("GUEST", 10),
     ;
 
     String value;
+
+    int level;
 
     public String toString() {
         return value;

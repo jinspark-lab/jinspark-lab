@@ -13,8 +13,8 @@ public class LabController {
     private UserLabService userLabService;
 
     @ResponseBody
-    @RequestMapping(value = "/{userId}", method = RequestMethod.POST)
-    public UserLabResponse getUserLab(@PathVariable("userId") String userId) {
-        return userLabService.getUserLabResponse(userId);
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public UserLabResponse getUserLab() {
+        return userLabService.getUserLabResponse();
     }
 }
