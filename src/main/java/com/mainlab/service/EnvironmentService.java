@@ -1,5 +1,6 @@
 package com.mainlab.service;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
@@ -13,7 +14,7 @@ public class EnvironmentService {
         return Region.US_EAST_1;
     }
 
-    // TODO: Set EhCache as per Key
+    @Cacheable(value = "secretsManagerParam", key = "#secretName")
     public String getStringValue(String secretName) {
         // Get Credential from default credential
         // https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/credentials.html

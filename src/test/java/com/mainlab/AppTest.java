@@ -1,16 +1,20 @@
 package com.mainlab;
 
-import com.mainlab.model.UserProfile;
 import com.mainlab.model.UserProfileResponse;
 import com.mainlab.service.UserProfileService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static org.junit.Assert.*;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -20,9 +24,26 @@ public class AppTest {
     @Autowired
     private UserProfileService userProfileService;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     @Test
     public void testApp() {
         UserProfileResponse userProfileResponse = userProfileService.getTestUserProfile();
         assertEquals("jinsangp@gmail.com", userProfileResponse.getUserProfile().getUserId());
+    }
+
+    @Cacheable(value = "testUserProfile", key = "#key")
+    public UserProfileResponse getTestUserProfileCache(String key) {
+        return userProfileService.getTestUserProfile();
+    }
+
+    @CacheEvict(key = "testUserProfile")
+    @Test
+    public void testCache() {
+        UserProfileResponse userProfileResponse = getTestUserProfileCache("test");
+        UserProfileResponse cachedResponse = Optional.ofNullable(cacheManager.getCache("testUserProfile"))
+                .map(cache -> cache.get("test", UserProfileResponse.class)).get();
+        assertEquals(userProfileResponse.getUserProfile().getUserId(), cachedResponse.getUserProfile().getUserId());
     }
 }
