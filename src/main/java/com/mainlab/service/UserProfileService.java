@@ -3,13 +3,12 @@ package com.mainlab.service;
 import com.mainlab.common.OperationService;
 import com.mainlab.common.OperationType;
 import com.mainlab.common.OperationUnit;
-import com.mainlab.model.*;
-import com.mainlab.model.exception.ErrorCode;
-import com.mainlab.model.exception.ErrorCodes;
-import com.mainlab.model.exception.MalformedRequestException;
+import com.mainlab.model.UserProfile;
+import com.mainlab.model.UserProfileRequest;
+import com.mainlab.model.UserProfileResponse;
+import com.mainlab.model.UserProject;
 import com.mainlab.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
