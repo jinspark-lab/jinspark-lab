@@ -15,6 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -33,17 +34,12 @@ public class AppTest {
         assertEquals("jinsangp@gmail.com", userProfileResponse.getUserProfile().getUserId());
     }
 
-    @Cacheable(value = "testUserProfile", key = "#key")
-    public UserProfileResponse getTestUserProfileCache(String key) {
-        return userProfileService.getTestUserProfile();
-    }
-
-    @CacheEvict(key = "testUserProfile")
     @Test
     public void testCache() {
-        UserProfileResponse userProfileResponse = getTestUserProfileCache("test");
-        UserProfileResponse cachedResponse = Optional.ofNullable(cacheManager.getCache("testUserProfile"))
-                .map(cache -> cache.get("test", UserProfileResponse.class)).get();
-        assertEquals(userProfileResponse.getUserProfile().getUserId(), cachedResponse.getUserProfile().getUserId());
+        UserProfileResponse userProfileResponse = userProfileService.getTestUserProfile("test");
+        Optional<UserProfileResponse> cachedResponse = Optional.ofNullable(cacheManager.getCache("testUserProfile"))
+                .map(cache -> cache.get("test", UserProfileResponse.class));
+        assertTrue(cachedResponse.isPresent());
+        assertEquals(userProfileResponse.getUserProfile().getUserId(), cachedResponse.get().getUserProfile().getUserId());
     }
 }

@@ -9,6 +9,7 @@ import com.mainlab.model.UserProfileResponse;
 import com.mainlab.model.UserProject;
 import com.mainlab.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -50,6 +51,11 @@ public class UserProfileService {
             userProfileResponse.setUserCareerList(userCareerService.getCompleteUserCareerList(userId));
         });
         return userProfileResponse;
+    }
+
+    @Cacheable(value = "testUserProfile", key = "#key")
+    public UserProfileResponse getTestUserProfile(String key) {
+        return getTestUserProfile();
     }
 
     public UserProfileResponse getCompleteUserProfile() {

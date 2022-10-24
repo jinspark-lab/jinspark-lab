@@ -18,12 +18,14 @@ import com.mainlab.model.UserInfo;
 import com.mainlab.model.exception.AuthorizationException;
 import com.mainlab.model.exception.BaseRuntimeException;
 import com.mainlab.model.exception.ErrorCode;
+import com.mainlab.model.exception.ErrorCodes;
 import com.mainlab.model.login.AuthEnvironmentModel;
 import com.mainlab.model.login.JwtResponse;
 import com.mainlab.model.login.UserToken;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -35,6 +37,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
+
+    @Value("${spring.profiles.active}")
+    private String profile;
+
+    @Value("${local.login.code}")
+    private String localLoginCode;
 
     @Value("${google.auth.clientid}")
     private String googleClientId;
@@ -69,6 +77,32 @@ public class AuthService {
         String authInfo = environmentService.getStringValue("jinsparklab/app-auth");
         AuthEnvironmentModel authEnvironmentModel = objectConvertService.stringToObj(authInfo, AuthEnvironmentModel.class);
         return authEnvironmentModel.getSecret();
+    }
+
+    public JwtResponse loginLocal(String localCredential) {
+        if (profile.equals("dev")) {
+            ErrorCodes.checkCondition((localLoginCode.length() > 10 && localCredential.equals(localLoginCode)),
+                    ErrorCode.FORBIDDEN, "Invalid Local Login Code");
+            String devEmail = "jinsangp@gmail.com";
+            UserInfo userInfo = userService.loadUserInfo(devEmail);
+            UserToken token = null;
+            if (Optional.ofNullable(userInfo).isPresent()) {
+                //If refresh Token is expired, need to refresh "Refresh token".
+                if (isExpired(userInfo.getRefreshToken())) {
+                    String refreshToken = generateRefreshToken(devEmail, userInfo.getRoleTypeList());
+                    userService.updateRefreshToken(userInfo.getUserId(), refreshToken);
+                    userInfo = userService.loadUserInfo(userInfo.getUserId());
+                }
+                String accessToken = generateAccessToken(userInfo);
+                token = new UserToken(accessToken, userInfo.getRefreshToken());
+            } else {
+                UserInfo newUserInfo = registerNewUser(devEmail);
+                String accessToken = generateAccessToken(newUserInfo);
+                token = new UserToken(accessToken, newUserInfo.getRefreshToken());
+            }
+            return new JwtResponse(token);
+        }
+        throw new BaseRuntimeException("Unable to access using Local API.", ErrorCode.FORBIDDEN);
     }
 
     public JwtResponse loginGoogle(String credential) {
