@@ -24,7 +24,8 @@ public class UserProjectService {
     public List<OperationUnit> processUpdateUserProjectList(String userId, List<UserProject> userProjectList) {
         List<OperationUnit> operationUnitList = new LinkedList<>();
 
-        Map<String, UserProject> newUniqueUserProjectMap = userProjectList.stream().collect(Collectors.toMap(UserProject::getUniqueProjectId, userProject -> userProject));
+        Map<String, UserProject> newUniqueUserProjectMap = userProjectList.stream()
+                .collect(Collectors.toMap(UserProject::getUniqueProjectId, userProject -> userProject));
         List<UserProject> oldUserProjectList = getUserProjectList(userId);
         List<UserProject> deletedUserProjectList = oldUserProjectList.stream()
                 .filter(userProject -> !newUniqueUserProjectMap.containsKey(userProject.getUniqueProjectId()))

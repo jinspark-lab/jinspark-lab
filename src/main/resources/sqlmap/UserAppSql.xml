@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserAppSql">
+    <select id="selectUserApp" parameterType="map" resultType="com.mainlab.model.UserApp">
+        SELECT
+            `user_id` as `userId`,
+            `app_id` as `appId`,
+            `repo_link` as `repoLink`,
+            `intro_text` as `introText`,
+            `app_link` as `appLink`,
+            `architecture_url` as `architectureUrl`,
+            `description` as `description`
+        FROM
+            `user_app`
+        WHERE
+            `user_id` = #{userId}
+            AND `app_id` = #{appId}
+    </select>
+    <insert id="insertUserApp" parameterType="com.mainlab.model.UserApp">
+        INSERT INTO
+            `user_app`
+        (
+            `user_id`,
+            `app_id`,
+            `repo_link`,
+            `intro_text`,
+            `app_link`,
+            `architecture_url`,
+            `description`,
+            `created`,
+            `modified`
+        ) VALUES
+        (
+            #{userId},
+            #{appId},
+            #{repoLink},
+            #{introText},
+            #{appLink},
+            #{architectureUrl},
+            #{description},
+            NOW(),
+            NOW()
+        )
+    </insert>
+    <update id="updateUserApp" parameterType="com.mainlab.model.UserApp">
+        UPDATE
+            `user_app`
+        SET
+            `app_id` = #{appId},
+            `repo_link` = #{repoLink},
+            `intro_text` = #{introText},
+            `app_link` = #{appLink},
+            `architecture_url` = #{architectureUrl},
+            `description` = #{description},
+            `modified` = NOW()
+        WHERE
+            `user_id` = #{userId}
+            AND `app_id` = #{appId}
+    </update>
+    <delete id="deleteUserApp" parameterType="map">
+        DELETE FROM
+            `user_app`
+        WHERE
+            `user_id` = #{userId}
+            AND `app_id` = #{appId}
+    </delete>
+</mapper>

@@ -27,6 +27,8 @@ public enum ErrorCode {
     AUTH_OVERDUE(1001),
     MALFORMED_REQUEST(1002),
 
+    USER_APP_NOT_EXIST(2001),
+
     NOT_SUPPORTED(9001),
     ;
 
