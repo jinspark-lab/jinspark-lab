@@ -40,7 +40,7 @@
             `user_id` = #{userId}
             AND `app_id` = #{appId}
     </update>
-    <delete id="deleteUserAppShortcut" parameterType="com.mainlab.model.UserAppShortcut">
+    <delete id="deleteUserAppShortcut" parameterType="map">
         DELETE FROM
             `user_app_shortcut`
         WHERE

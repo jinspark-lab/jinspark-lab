@@ -2,6 +2,7 @@ package com.mainlab.controller;
 
 import com.mainlab.model.UserApp;
 import com.mainlab.model.UserAppRequest;
+import com.mainlab.model.UserAppResponse;
 import com.mainlab.model.UserAppShortcutResponse;
 import com.mainlab.model.response.SuccessResponse;
 import com.mainlab.service.UserAppService;
@@ -28,21 +29,29 @@ public class UserAppController extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/admin", method = RequestMethod.POST)
+    public UserAppResponse getUserAppAdminDetail(@RequestParam(value = "appId") String appId) {
+        return userAppService.getUserAppAdminDetail(appId);
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public SuccessResponse insertUserApp(@RequestBody UserAppRequest userAppRequest) {
-//        userAppService.addUserApp(userAppRequest);
+        userAppService.addUserApp(userAppRequest);
         return new SuccessResponse();
     }
 
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public void updateUserApp(@RequestBody UserAppRequest userAppRequest) {
-
+    public SuccessResponse updateUserApp(@RequestBody UserAppRequest userAppRequest) {
+        userAppService.updateUserApp(userAppRequest);
+        return new SuccessResponse();
     }
 
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public void deleteUserApp(@RequestBody UserAppRequest userAppRequest) {
-
+    public SuccessResponse deleteUserApp(@RequestParam(value = "appId") String appId) {
+        userAppService.deleteUserApp(appId);
+        return new SuccessResponse();
     }
 }

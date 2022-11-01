@@ -6,6 +6,7 @@ import com.mainlab.common.OperationType;
 import com.mainlab.common.OperationUnit;
 import com.mainlab.model.UserApp;
 import com.mainlab.model.UserAppRequest;
+import com.mainlab.model.UserAppResponse;
 import com.mainlab.model.UserAppShortcut;
 import com.mainlab.model.exception.BaseRuntimeException;
 import com.mainlab.model.exception.ErrorCode;
@@ -41,6 +42,15 @@ public class UserAppService {
                         , ErrorCode.USER_APP_NOT_EXIST));
     }
 
+    public UserAppResponse getUserAppAdminDetail(String appId) {
+        UserApp userApp = getUserAppDetail(appId);
+        UserAppShortcut userAppShortcut = getUserAppShortcutList().stream()
+                .filter(userAppShortcut1 -> userAppShortcut1.getAppId().equals(appId)).findFirst()
+                .orElseThrow(() -> new BaseRuntimeException("User App Shortcut does not exists. appId=" + appId,
+                        ErrorCode.USER_APP_SHORTCUT_NOT_EXIST));
+        return new UserAppResponse(userApp, userAppShortcut.getThumbnailUrl());
+    }
+
     public void addUserApp(UserAppRequest userAppRequest) {
         //Write Operation -> Authorized Users only can do
         String queryUserId = userService.getOperationUserId(OperationType.WRITE);
@@ -56,5 +66,25 @@ public class UserAppService {
                         new UserAppShortcut(queryUserId, userApp.getAppId(), userAppRequest.getThumbnailUrl())));
 
         operationService.operate(queryUserId, operationUnitList);
+    }
+
+    public void updateUserApp(UserAppRequest userAppRequest) {
+        String queryId = userService.getOperationUserId(OperationType.WRITE);
+        userAppRequest.getUserApp().setUserId(queryId);
+        UserAppShortcut userAppShortcut = new UserAppShortcut(queryId, userAppRequest.getUserApp().getAppId(), userAppRequest.getThumbnailUrl());
+
+        List<OperationUnit> operationUnitList = Lists.newLinkedList();
+        operationUnitList.add(() -> userAppRepository.updateUserApp(userAppRequest.getUserApp()));
+        operationUnitList.add(() -> userAppShortcutRepository.updateUserAppShortcut(userAppShortcut));
+        operationService.operate(queryId, operationUnitList);
+    }
+
+    public void deleteUserApp(String appId) {
+        String queryId = userService.getOperationUserId(OperationType.WRITE);
+
+        List<OperationUnit> operationUnitList = Lists.newLinkedList();
+        operationUnitList.add(() -> userAppShortcutRepository.deleteUserAppShortcut(queryId, appId));
+        operationUnitList.add(() -> userAppRepository.deleteUserApp(queryId, appId));
+        operationService.operate(queryId, operationUnitList);
     }
 }

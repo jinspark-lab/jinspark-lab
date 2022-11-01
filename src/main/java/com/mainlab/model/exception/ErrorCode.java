@@ -28,6 +28,7 @@ public enum ErrorCode {
     MALFORMED_REQUEST(1002),
 
     USER_APP_NOT_EXIST(2001),
+    USER_APP_SHORTCUT_NOT_EXIST(2002),
 
     NOT_SUPPORTED(9001),
     ;
