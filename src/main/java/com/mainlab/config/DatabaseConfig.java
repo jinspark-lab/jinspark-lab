@@ -1,6 +1,7 @@
 package com.mainlab.config;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -44,14 +45,14 @@ public class DatabaseConfig {
 
     @Bean(name = "dataSource")
     public DataSource dataSource() throws PropertyVetoException {
-        ComboPooledDataSource dataSource = new ComboPooledDataSource();
-        dataSource.setDriverClass(driverClassName);
-        dataSource.setJdbcUrl(url);
-        dataSource.setUser(username);
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setDriverClassName(driverClassName);
+        hikariConfig.setJdbcUrl(url);
+        hikariConfig.setUsername(username);
         if (profile.equals("dev")) {
-            dataSource.setPassword(password);
+            hikariConfig.setPassword(password);
         }
-        return dataSource;
+        return new HikariDataSource(hikariConfig);
     }
 
     @Bean

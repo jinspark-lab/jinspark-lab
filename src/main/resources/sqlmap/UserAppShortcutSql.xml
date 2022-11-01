@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserAppShortcutSql">
+    <select id="selectUserAppShortcutList" parameterType="String" resultType="com.mainlab.model.UserAppShortcut">
+        SELECT
+            `user_id` as `userId`,
+            `app_id` as `appId`,
+            `thumbnail_url` as `thumbnailUrl`
+        FROM
+            `user_app_shortcut`
+        WHERE
+            `user_id` = #{userId}
+    </select>
+    <insert id="insertUserAppShortcut" parameterType="com.mainlab.model.UserAppShortcut">
+        INSERT INTO
+            `user_app_shortcut`
+        (
+            `user_id`,
+            `app_id`,
+            `thumbnail_url`,
+            `created`,
+            `modified`
+        ) VALUES
+        (
+            #{userId},
+            #{appId},
+            #{thumbnailUrl},
+            NOW(),
+            NOW()
+        )
+    </insert>
+    <update id="updateUserAppShortcut" parameterType="com.mainlab.model.UserAppShortcut">
+        UPDATE
+            `user_app_shortcut`
+        SET
+            `app_id` = #{appId},
+            `thumbnail_url` = #{thumbnailUrl},
+            `modified` = NOW()
+        WHERE
+            `user_id` = #{userId}
+            AND `app_id` = #{appId}
+    </update>
+    <delete id="deleteUserAppShortcut" parameterType="com.mainlab.model.UserAppShortcut">
+        DELETE FROM
+            `user_app_shortcut`
+        WHERE
+            `user_id` = #{userId}
+            AND `app_id` = #{appId}
+    </delete>
+</mapper>

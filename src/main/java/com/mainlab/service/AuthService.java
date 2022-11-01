@@ -177,7 +177,7 @@ public class AuthService {
                 .withClaim("userId", userInfo.getUserId())
                 .withClaim("role", userInfo.getRoleTypeList().stream().map(RoleType::toString).collect(Collectors.toList()))
                 .withIssuedAt(new Date(issued.getMillis()))
-                .withExpiresAt(new Date(issued.plusMinutes(1).getMillis()))
+                .withExpiresAt(new Date(issued.plusMinutes(60).getMillis()))
                 .withIssuer(getAuthIssuer())
                 .sign(algorithm);
     }
@@ -191,7 +191,7 @@ public class AuthService {
                 .withClaim("userId", userId)
                 .withClaim("role", roleTypeList.stream().map(RoleType::toString).collect(Collectors.toList()))
                 .withIssuedAt(new Date(issued.getMillis()))
-                .withExpiresAt(new Date(issued.plusMinutes(60).getMillis()))
+                .withExpiresAt(new Date(issued.plusMinutes(720).getMillis()))
                 .withIssuer(getAuthIssuer())
                 .sign(algorithm);
     }
