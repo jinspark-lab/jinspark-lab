@@ -1,5 +1,6 @@
 package com.mainlab.repository;
 
+import com.google.common.collect.ImmutableMap;
 import com.mainlab.model.UserAppShortcut;
 import org.springframework.stereotype.Repository;
 
@@ -26,8 +27,8 @@ public class UserAppShortcutRepository extends BaseRdbDaoSupport {
         sqlSessionTemplate.flushStatements();
     }
 
-    public void deleteUserAppShortcut(UserAppShortcut userAppShortcut) {
-        sqlSessionTemplate.delete(getMappedSql("deleteUserAppShortcut"), userAppShortcut);
+    public void deleteUserAppShortcut(String userId, String appId) {
+        sqlSessionTemplate.delete(getMappedSql("deleteUserAppShortcut"), ImmutableMap.of("userId", userId, "appId", appId));
         sqlSessionTemplate.flushStatements();
     }
 }
