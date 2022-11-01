@@ -19,6 +19,7 @@ public class UserApp implements Serializable {
     private String repoLink;
     private String introText;
     private String appLink;
-    private String architectureLink;
+    private String appPicture;
+    private String architectureUrl;
     private String description;
 }

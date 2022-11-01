@@ -3,6 +3,7 @@ package com.mainlab.controller;
 import com.mainlab.model.UserApp;
 import com.mainlab.model.UserAppRequest;
 import com.mainlab.model.UserAppShortcutResponse;
+import com.mainlab.model.response.SuccessResponse;
 import com.mainlab.service.UserAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,9 @@ public class UserAppController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public void insertUserApp(@RequestBody UserAppRequest userAppRequest) {
-
+    public SuccessResponse insertUserApp(@RequestBody UserAppRequest userAppRequest) {
+//        userAppService.addUserApp(userAppRequest);
+        return new SuccessResponse();
     }
 
     @ResponseBody

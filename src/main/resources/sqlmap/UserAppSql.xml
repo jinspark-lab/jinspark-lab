@@ -8,6 +8,7 @@
             `repo_link` as `repoLink`,
             `intro_text` as `introText`,
             `app_link` as `appLink`,
+            `app_picture` as `appPicture`,
             `architecture_url` as `architectureUrl`,
             `description` as `description`
         FROM
@@ -25,6 +26,7 @@
             `repo_link`,
             `intro_text`,
             `app_link`,
+            `app_picture`,
             `architecture_url`,
             `description`,
             `created`,
@@ -36,6 +38,7 @@
             #{repoLink},
             #{introText},
             #{appLink},
+            #{appPicture},
             #{architectureUrl},
             #{description},
             NOW(),
@@ -50,6 +53,7 @@
             `repo_link` = #{repoLink},
             `intro_text` = #{introText},
             `app_link` = #{appLink},
+            `app_picture` = #{appPicture},
             `architecture_url` = #{architectureUrl},
             `description` = #{description},
             `modified` = NOW()

@@ -53,7 +53,7 @@ public class UserAppService {
         operationUnitList.add(() -> userAppRepository.insertUserApp(userApp));
         operationUnitList.add(() ->
                 userAppShortcutRepository.insertUserAppShortcut(
-                        new UserAppShortcut(queryUserId, userApp.getAppId(), userAppRequest.getThumbnail())));
+                        new UserAppShortcut(queryUserId, userApp.getAppId(), userAppRequest.getThumbnailUrl())));
 
         operationService.operate(queryUserId, operationUnitList);
     }
