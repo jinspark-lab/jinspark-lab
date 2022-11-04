@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -18,6 +19,10 @@ public class StorageService {
 
     @Autowired
     private EnvironmentService environmentService;
+
+    private S3Client getS3Client() {
+        return S3Client.builder().region(environmentService.getAwsServiceRegion()).build();
+    }
 
     private String generateRandomPartitionKey() {
         int leftLimit = 48;
@@ -32,7 +37,7 @@ public class StorageService {
     }
 
     public String uploadObjectToS3(MultipartFile multipartFile) {
-        S3Client s3Client = S3Client.builder().region(environmentService.getAwsServiceRegion()).build();
+        S3Client s3Client = getS3Client();
         try {
             String keyName = generateRandomPartitionKey() + multipartFile.getOriginalFilename();
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -43,9 +48,19 @@ public class StorageService {
             InputStream inputStream = multipartFile.getInputStream();
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, inputStream.available()));
 
-            return "/" + keyName;
+            return keyName;
         } catch (IOException e) {
             throw new BaseRuntimeException("Failed to upload Resources", ErrorCode.RESOURCE_UPLOAD_FAIL);
         }
+    }
+
+    public void deleteObjectFromS3(String objectPath) {
+        S3Client s3Client = getS3Client();
+        System.out.println(objectPath + " has been deleted.");
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                .bucket(environmentService.getResourceBucketName())
+                .key(objectPath)
+                .build();
+        s3Client.deleteObject(deleteObjectRequest);
     }
 }

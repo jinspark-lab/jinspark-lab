@@ -16,4 +16,8 @@ public class ResourceFileService {
         return s3Object;
     }
 
+    public void deleteObjectFromStorage(String path) {
+        storageService.deleteObjectFromS3(path);
+    }
+
 }
