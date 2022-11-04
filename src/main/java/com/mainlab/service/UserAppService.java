@@ -10,6 +10,7 @@ import com.mainlab.model.UserAppResponse;
 import com.mainlab.model.UserAppShortcut;
 import com.mainlab.model.exception.BaseRuntimeException;
 import com.mainlab.model.exception.ErrorCode;
+import com.mainlab.model.exception.ErrorCodes;
 import com.mainlab.repository.UserAppRepository;
 import com.mainlab.repository.UserAppShortcutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,14 @@ public class UserAppService {
         return new UserAppResponse(userApp, userAppShortcut.getThumbnailUrl());
     }
 
+    private void validateUserAppRequest(UserAppRequest userAppRequest) {
+        ErrorCodes.checkCondition(Optional.ofNullable(userAppRequest.getUserApp().getAppId()).isPresent(), ErrorCode.USER_APP_INVALID_REQUEST, "Invalid User App Request. appId=" + userAppRequest.getUserApp().getAppId());
+        ErrorCodes.checkCondition(!userAppRequest.getUserApp().getAppId().equals(""), ErrorCode.USER_APP_INVALID_REQUEST, "Invalid User App Request. appId=" + userAppRequest.getUserApp().getAppId());
+    }
+
     public void addUserApp(UserAppRequest userAppRequest) {
         //Write Operation -> Authorized Users only can do
+        validateUserAppRequest(userAppRequest);
         String queryUserId = userService.getOperationUserId(OperationType.WRITE);
         //TODO: Check in every service or Implement it in Interceptor
 
@@ -69,6 +76,8 @@ public class UserAppService {
     }
 
     public void updateUserApp(UserAppRequest userAppRequest) {
+        validateUserAppRequest(userAppRequest);
+
         String queryId = userService.getOperationUserId(OperationType.WRITE);
         userAppRequest.getUserApp().setUserId(queryId);
         UserAppShortcut userAppShortcut = new UserAppShortcut(queryId, userAppRequest.getUserApp().getAppId(), userAppRequest.getThumbnailUrl());
