@@ -77,7 +77,7 @@ public class UserService {
         operationService.operate(userId, operationUnitList);
     }
 
-    private UserInfo getUserContextHolder() {
+    public UserInfo getUserContextHolder() {
         String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return loadUserInfo(principal);
     }
