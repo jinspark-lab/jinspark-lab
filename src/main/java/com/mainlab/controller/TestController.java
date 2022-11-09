@@ -20,7 +20,7 @@ public class TestController extends BaseController {
     private AppLogService appLogService;
 
     @ResponseBody
-    @RequestMapping(value = "/log", method = RequestMethod.POST)
+    @RequestMapping(value = "/log", method = RequestMethod.GET)
     public SuccessResponse testLog() {
         appLogService.test("Hello World Test");
         return new SuccessResponse();
