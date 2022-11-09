@@ -2,7 +2,7 @@ package com.mainlab.service;
 
 import com.mainlab.common.ObjectConvertService;
 import com.mainlab.model.log.AppLogRecord;
-import com.mainlab.model.log.FirehoseClient;
+import com.mainlab.model.log.FirehoseConnector;
 import com.mainlab.model.log.LogLevel;
 import com.mainlab.model.log.RecordType;
 import org.joda.time.DateTime;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.firehose.model.PutRecordRequest;
+import software.amazon.awssdk.services.firehose.model.PutRecordResponse;
 import software.amazon.awssdk.services.firehose.model.Record;
 
 @Service
@@ -20,7 +21,7 @@ public class AppLogService {
     private String deliveryStream;
 
     @Autowired
-    private FirehoseClient firehoseClient;
+    private FirehoseConnector firehoseConnector;
     @Autowired
     private ObjectConvertService objectConvertService;
     @Autowired
@@ -68,7 +69,8 @@ public class AppLogService {
                     .deliveryStreamName(deliveryStream)
                     .record(Record.builder().data(SdkBytes.fromUtf8String(data)).build())
                     .build();
-            firehoseClient.getAsyncClient().putRecord(putRecordRequest);
+            PutRecordResponse putRecordResponse = firehoseConnector.getSyncClient().putRecord(putRecordRequest);
+            System.out.println("Record ID : " + putRecordResponse.recordId());
         } catch (Exception e) {
             System.out.println(data);
             System.out.println(e.getMessage());
