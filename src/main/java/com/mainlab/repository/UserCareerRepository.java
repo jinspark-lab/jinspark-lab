@@ -1,5 +1,6 @@
 package com.mainlab.repository;
 
+import com.google.common.collect.ImmutableMap;
 import com.mainlab.model.UserCareer;
 import org.springframework.stereotype.Repository;
 
@@ -16,19 +17,19 @@ public class UserCareerRepository extends BaseRdbDaoSupport {
         return sqlSessionTemplate.selectList(getMappedSql("selectUserCareerList"), userId);
     }
 
-    public void upsertUserCareerList(List<UserCareer> userCareerList) {
+    public void upsertUserCareerList(String userId, List<UserCareer> userCareerList) {
         if (!userCareerList.isEmpty()) {
             userCareerList.forEach(userCareer -> {
-                sqlSessionTemplate.insert(getMappedSql("upsertUserCareer"), userCareer);
+                sqlSessionTemplate.insert(getMappedSql("upsertUserCareer"), ImmutableMap.of("userId", userId, "userCareer", userCareer));
             });
             sqlSessionTemplate.flushStatements();
         }
     }
 
-    public void deleteUserCareerList(List<UserCareer> userCareerList) {
+    public void deleteUserCareerList(String userId, List<UserCareer> userCareerList) {
         if (!userCareerList.isEmpty()) {
             userCareerList.forEach(userCareer ->
-                    sqlSessionTemplate.delete(getMappedSql("deleteUserCareer"), userCareer));
+                    sqlSessionTemplate.delete(getMappedSql("deleteUserCareer"), ImmutableMap.of("userId", userId, "userCareer", userCareer)));
             sqlSessionTemplate.flushStatements();
         }
     }

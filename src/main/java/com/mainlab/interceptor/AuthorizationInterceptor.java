@@ -23,6 +23,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // Every API operation should be validated by interceptor
         if (request.getMethod().equals("POST")) {
             return filterAuthorization(request, response, handler);
         }

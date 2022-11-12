@@ -15,16 +15,16 @@
         WHERE
             `user_id` = #{userId}
     </select>
-    <update id="updateUserProfile" parameterType="com.mainlab.model.UserProfile">
+    <update id="updateUserProfile" parameterType="map">
         UPDATE
             `user_profile`
         SET
-            `name` = #{name},
-            `title` = #{title},
-            `picture_url` = #{pictureUrl},
-            `description` = #{description},
-            `linkedin_url` = #{linkedinUrl},
-            `contact_email` = #{contactEmail},
+            `name` = #{userProfile.name},
+            `title` = #{userProfile.title},
+            `picture_url` = #{userProfile.pictureUrl},
+            `description` = #{userProfile.description},
+            `linkedin_url` = #{userProfile.linkedinUrl},
+            `contact_email` = #{userProfile.contactEmail},
             `modified` = NOW()
         WHERE
             `user_id` = #{userId}

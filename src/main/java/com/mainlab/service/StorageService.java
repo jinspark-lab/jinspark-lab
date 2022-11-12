@@ -20,7 +20,7 @@ public class StorageService {
     @Autowired
     private EnvironmentService environmentService;
 
-    private S3Client getS3Client() {
+    public S3Client getS3Client() {
         return S3Client.builder().region(environmentService.getAwsServiceRegion()).build();
     }
 

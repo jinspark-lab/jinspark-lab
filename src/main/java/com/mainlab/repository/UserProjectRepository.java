@@ -1,5 +1,6 @@
 package com.mainlab.repository;
 
+import com.google.common.collect.ImmutableMap;
 import com.mainlab.model.UserProject;
 import org.springframework.stereotype.Repository;
 
@@ -16,19 +17,19 @@ public class UserProjectRepository extends BaseRdbDaoSupport {
         return sqlSessionTemplate.selectList(getMappedSql("selectUserProjectList"), userId);
     }
 
-    public void upsertUserProjectList(List<UserProject> userProjectList) {
+    public void upsertUserProjectList(String userId, List<UserProject> userProjectList) {
         if (!userProjectList.isEmpty()) {
             userProjectList.forEach(userProject -> {
-                sqlSessionTemplate.insert(getMappedSql("upsertUserProject"), userProject);
+                sqlSessionTemplate.insert(getMappedSql("upsertUserProject"), ImmutableMap.of("userId", userId, "userProject", userProject));
             });
             sqlSessionTemplate.flushStatements();
         }
     }
 
-    public void deleteUserProjectList(List<UserProject> userProjectList) {
+    public void deleteUserProjectList(String userId, List<UserProject> userProjectList) {
         if (!userProjectList.isEmpty()) {
             userProjectList.forEach(userProject -> {
-                sqlSessionTemplate.delete(getMappedSql("deleteUserProject"), userProject);
+                sqlSessionTemplate.delete(getMappedSql("deleteUserProject"), ImmutableMap.of("userId", userId, "userProject", userProject));
             });
             sqlSessionTemplate.flushStatements();
         }

@@ -15,13 +15,13 @@ public class UserAppRepository extends BaseRdbDaoSupport {
         return sqlSessionTemplate.selectOne(getMappedSql("selectUserApp"), ImmutableMap.of("userId", userId, "appId", appId));
     }
 
-    public void insertUserApp(UserApp userApp) {
-        sqlSessionTemplate.insert(getMappedSql("insertUserApp"), userApp);
+    public void insertUserApp(String userId, UserApp userApp) {
+        sqlSessionTemplate.insert(getMappedSql("insertUserApp"), ImmutableMap.of("userId", userId, "userApp", userApp));
         sqlSessionTemplate.flushStatements();
     }
 
-    public void updateUserApp(UserApp userApp) {
-        sqlSessionTemplate.update(getMappedSql("updateUserApp"), userApp);
+    public void updateUserApp(String userId, UserApp userApp) {
+        sqlSessionTemplate.update(getMappedSql("updateUserApp"), ImmutableMap.of("userId", userId, "userApp", userApp));
         sqlSessionTemplate.flushStatements();
     }
 

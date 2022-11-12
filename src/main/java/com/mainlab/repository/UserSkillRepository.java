@@ -1,5 +1,6 @@
 package com.mainlab.repository;
 
+import com.google.common.collect.ImmutableMap;
 import com.mainlab.model.UserSkill;
 import org.springframework.stereotype.Repository;
 
@@ -16,19 +17,19 @@ public class UserSkillRepository extends BaseRdbDaoSupport {
         return sqlSessionTemplate.selectList(getMappedSql("selectUserSkillList"), userId);
     }
 
-    public void upsertUserSkillList(List<UserSkill> userSkillList) {
+    public void upsertUserSkillList(String userId, List<UserSkill> userSkillList) {
         if (!userSkillList.isEmpty()) {
             userSkillList.forEach(userSkill -> {
-                sqlSessionTemplate.insert(getMappedSql("upsertUserSkill"), userSkill);
+                sqlSessionTemplate.insert(getMappedSql("upsertUserSkill"), ImmutableMap.of("userId", userId, "userSkill", userSkill));
             });
             sqlSessionTemplate.flushStatements();
         }
     }
 
-    public void deleteUserSkillList(List<UserSkill> userSkillList) {
+    public void deleteUserSkillList(String userId, List<UserSkill> userSkillList) {
         if (!userSkillList.isEmpty()) {
             userSkillList.forEach(userSkill -> {
-                sqlSessionTemplate.delete(getMappedSql("deleteUserSkill"), userSkill);
+                sqlSessionTemplate.delete(getMappedSql("deleteUserSkill"), ImmutableMap.of("userId", userId, "userSkill", userSkill));
             });
             sqlSessionTemplate.flushStatements();
         }

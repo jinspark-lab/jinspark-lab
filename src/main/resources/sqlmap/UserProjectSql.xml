@@ -13,7 +13,7 @@
         WHERE
             `user_id` = #{userId}
     </select>
-    <insert id="upsertUserProject" parameterType="com.mainlab.model.UserProject">
+    <insert id="upsertUserProject" parameterType="map">
         INSERT INTO
             `user_project`
         (
@@ -26,24 +26,24 @@
             `modified`
         ) VALUES
         (
-            #{projectId},
-            #{careerId},
+            #{userProject.projectId},
+            #{userProject.careerId},
             #{userId},
-            #{projectOrder},
-            #{description},
+            #{userProject.projectOrder},
+            #{userProject.description},
             NOW(),
             NOW()
         ) ON DUPLICATE KEY UPDATE
-            `project_order` = #{projectOrder},
-            `description` = #{description},
+            `project_order` = #{userProject.projectOrder},
+            `description` = #{userProject.description},
             `modified` = NOW()
     </insert>
-    <delete id="deleteUserProject" parameterType="com.mainlab.model.UserProject">
+    <delete id="deleteUserProject" parameterType="map">
         DELETE FROM
             `user_project`
         WHERE
             `user_id` = #{userId}
-            AND `career_id` = #{careerId}
-            AND `project_id` = #{projectId}
+            AND `career_id` = #{userProject.careerId}
+            AND `project_id` = #{userProject.projectId}
     </delete>
 </mapper>
