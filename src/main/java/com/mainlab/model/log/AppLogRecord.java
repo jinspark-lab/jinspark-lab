@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 public class AppLogRecord {
     @JsonIgnore
     private DateTime dateTime;     //@timestamp
+    private String host;
     private String userId;
     private LogLevel logLevel;
     private RecordType recordType;

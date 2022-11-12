@@ -10,13 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.SdkBytes;
+import software.amazon.awssdk.services.firehose.model.FirehoseException;
 import software.amazon.awssdk.services.firehose.model.PutRecordRequest;
 import software.amazon.awssdk.services.firehose.model.PutRecordResponse;
 import software.amazon.awssdk.services.firehose.model.Record;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 @Service
 public class AppLogService {
 
+    @Value("${spring.profiles.active}")
+    private String profile;
     @Value("${application.log.firehose}")
     private String deliveryStream;
 
@@ -29,13 +35,23 @@ public class AppLogService {
 
     private String generateAppLogRecord(LogLevel logLevel, String message) {
         AppLogRecord appLogRecord = AppLogRecord.builder()
-//                .userId(userService.getUserContextHolder().getUserId())
+                .host(getHostAddress())
+                .userId(userService.getUserContextHolder().getUserId())
                 .logLevel(logLevel)
                 .recordType(RecordType.LOG)
                 .message(message)
                 .dateTime(DateTime.now())
                 .build();
         return objectConvertService.objToString(appLogRecord);
+    }
+
+    private String getHostAddress() {
+        try {
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            return inetAddress.getHostAddress();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void log(LogLevel logLevel, String message) {
@@ -64,16 +80,25 @@ public class AppLogService {
 
     private void sendLog(String data) {
         data += "\n";
-        try {
-            PutRecordRequest putRecordRequest = PutRecordRequest.builder()
-                    .deliveryStreamName(deliveryStream)
-                    .record(Record.builder().data(SdkBytes.fromUtf8String(data)).build())
-                    .build();
-            PutRecordResponse putRecordResponse = firehoseConnector.getSyncClient().putRecord(putRecordRequest);
-            System.out.println("Record ID : " + putRecordResponse.recordId());
-        } catch (Exception e) {
+        if (profile.equals("dev")) {
             System.out.println(data);
-            System.out.println(e.getMessage());
+        } else {
+            try {
+                PutRecordRequest putRecordRequest = PutRecordRequest.builder()
+                        .deliveryStreamName(deliveryStream)
+                        .record(Record.builder().data(SdkBytes.fromUtf8String(data)).build())
+                        .build();
+                PutRecordResponse putRecordResponse = firehoseConnector.getSyncClient().putRecord(putRecordRequest);
+                System.out.println("Record ID : " + putRecordResponse.recordId());
+            } catch (FirehoseException e) {
+                // Log into CloudWatch Logs
+                System.out.println(data);
+                System.out.println("Firehose Exception : " + e.getMessage());
+            } catch (Exception e) {
+                // Log into CloudWatch Logs
+                System.out.println(data);
+                System.out.println("Exception : " + e.getMessage());
+            }
         }
     }
 }
