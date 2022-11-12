@@ -11,7 +11,7 @@
         WHERE
             `user_id` = #{userId}
     </select>
-    <insert id="insertUserAppShortcut" parameterType="com.mainlab.model.UserAppShortcut">
+    <insert id="insertUserAppShortcut" parameterType="map">
         INSERT INTO
             `user_app_shortcut`
         (
@@ -23,22 +23,22 @@
         ) VALUES
         (
             #{userId},
-            #{appId},
-            #{thumbnailUrl},
+            #{userAppShortcut.appId},
+            #{userAppShortcut.thumbnailUrl},
             NOW(),
             NOW()
         )
     </insert>
-    <update id="updateUserAppShortcut" parameterType="com.mainlab.model.UserAppShortcut">
+    <update id="updateUserAppShortcut" parameterType="map">
         UPDATE
             `user_app_shortcut`
         SET
-            `app_id` = #{appId},
-            `thumbnail_url` = #{thumbnailUrl},
+            `app_id` = #{userAppShortcut.appId},
+            `thumbnail_url` = #{userAppShortcut.thumbnailUrl},
             `modified` = NOW()
         WHERE
             `user_id` = #{userId}
-            AND `app_id` = #{appId}
+            AND `app_id` = #{userAppShortcut.appId}
     </update>
     <delete id="deleteUserAppShortcut" parameterType="map">
         DELETE FROM

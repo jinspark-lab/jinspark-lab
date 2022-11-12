@@ -17,7 +17,7 @@
             `user_id` = #{userId}
             AND `app_id` = #{appId}
     </select>
-    <insert id="insertUserApp" parameterType="com.mainlab.model.UserApp">
+    <insert id="insertUserApp" parameterType="map">
         INSERT INTO
             `user_app`
         (
@@ -34,32 +34,32 @@
         ) VALUES
         (
             #{userId},
-            #{appId},
-            #{repoLink},
-            #{introText},
-            #{appLink},
-            #{appPicture},
-            #{architectureUrl},
-            #{description},
+            #{userApp.appId},
+            #{userApp.repoLink},
+            #{userApp.introText},
+            #{userApp.appLink},
+            #{userApp.appPicture},
+            #{userApp.architectureUrl},
+            #{userApp.description},
             NOW(),
             NOW()
         )
     </insert>
-    <update id="updateUserApp" parameterType="com.mainlab.model.UserApp">
+    <update id="updateUserApp" parameterType="map">
         UPDATE
             `user_app`
         SET
-            `app_id` = #{appId},
-            `repo_link` = #{repoLink},
-            `intro_text` = #{introText},
-            `app_link` = #{appLink},
-            `app_picture` = #{appPicture},
-            `architecture_url` = #{architectureUrl},
-            `description` = #{description},
+            `app_id` = #{userApp.appId},
+            `repo_link` = #{userApp.repoLink},
+            `intro_text` = #{userApp.introText},
+            `app_link` = #{userApp.appLink},
+            `app_picture` = #{userApp.appPicture},
+            `architecture_url` = #{userApp.architectureUrl},
+            `description` = #{userApp.description},
             `modified` = NOW()
         WHERE
             `user_id` = #{userId}
-            AND `app_id` = #{appId}
+            AND `app_id` = #{userApp.appId}
     </update>
     <delete id="deleteUserApp" parameterType="map">
         DELETE FROM

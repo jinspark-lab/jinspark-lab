@@ -61,15 +61,13 @@ public class UserAppService {
         //Write Operation -> Authorized Users only can do
         validateUserAppRequest(userAppRequest);
         String queryUserId = userService.getOperationUserId(OperationType.WRITE);
-        //TODO: Check in every service or Implement it in Interceptor
 
         UserApp userApp = userAppRequest.getUserApp();
-        userApp.setUserId(queryUserId);
 
         List<OperationUnit> operationUnitList = Lists.newLinkedList();
-        operationUnitList.add(() -> userAppRepository.insertUserApp(userApp));
+        operationUnitList.add(() -> userAppRepository.insertUserApp(queryUserId, userApp));
         operationUnitList.add(() ->
-                userAppShortcutRepository.insertUserAppShortcut(
+                userAppShortcutRepository.insertUserAppShortcut(queryUserId,
                         new UserAppShortcut(queryUserId, userApp.getAppId(), userAppRequest.getThumbnailUrl())));
 
         operationService.operate(queryUserId, operationUnitList);
@@ -78,22 +76,21 @@ public class UserAppService {
     public void updateUserApp(UserAppRequest userAppRequest) {
         validateUserAppRequest(userAppRequest);
 
-        String queryId = userService.getOperationUserId(OperationType.WRITE);
-        userAppRequest.getUserApp().setUserId(queryId);
-        UserAppShortcut userAppShortcut = new UserAppShortcut(queryId, userAppRequest.getUserApp().getAppId(), userAppRequest.getThumbnailUrl());
+        String queryUserId = userService.getOperationUserId(OperationType.WRITE);
+        UserAppShortcut userAppShortcut = new UserAppShortcut(queryUserId, userAppRequest.getUserApp().getAppId(), userAppRequest.getThumbnailUrl());
 
         List<OperationUnit> operationUnitList = Lists.newLinkedList();
-        operationUnitList.add(() -> userAppRepository.updateUserApp(userAppRequest.getUserApp()));
-        operationUnitList.add(() -> userAppShortcutRepository.updateUserAppShortcut(userAppShortcut));
-        operationService.operate(queryId, operationUnitList);
+        operationUnitList.add(() -> userAppRepository.updateUserApp(queryUserId, userAppRequest.getUserApp()));
+        operationUnitList.add(() -> userAppShortcutRepository.updateUserAppShortcut(queryUserId, userAppShortcut));
+        operationService.operate(queryUserId, operationUnitList);
     }
 
     public void deleteUserApp(String appId) {
-        String queryId = userService.getOperationUserId(OperationType.WRITE);
+        String queryUserId = userService.getOperationUserId(OperationType.WRITE);
 
         List<OperationUnit> operationUnitList = Lists.newLinkedList();
-        operationUnitList.add(() -> userAppShortcutRepository.deleteUserAppShortcut(queryId, appId));
-        operationUnitList.add(() -> userAppRepository.deleteUserApp(queryId, appId));
-        operationService.operate(queryId, operationUnitList);
+        operationUnitList.add(() -> userAppShortcutRepository.deleteUserAppShortcut(queryUserId, appId));
+        operationUnitList.add(() -> userAppRepository.deleteUserApp(queryUserId, appId));
+        operationService.operate(queryUserId, operationUnitList);
     }
 }

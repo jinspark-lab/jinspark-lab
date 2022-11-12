@@ -15,7 +15,7 @@
         WHERE
             `user_id` = #{userId}
     </select>
-    <insert id="upsertUserCareer" parameterType="com.mainlab.model.UserCareer">
+    <insert id="upsertUserCareer" parameterType="map">
         INSERT INTO
             `user_career`
         (
@@ -30,28 +30,28 @@
             `modified`
         ) VALUES
         (
-            #{careerId},
+            #{userCareer.careerId},
             #{userId},
-            #{careerStart},
-            #{careerEnd},
-            #{company},
-            #{jobTitle},
-            #{description},
+            #{userCareer.careerStart},
+            #{userCareer.careerEnd},
+            #{userCareer.company},
+            #{userCareer.jobTitle},
+            #{userCareer.description},
             NOW(),
             NOW()
         ) ON DUPLICATE KEY UPDATE
-            `career_start` = #{careerStart},
-            `career_end` = #{careerEnd},
-            `company` = #{company},
-            `job_title` = #{jobTitle},
-            `description` = #{description},
+            `career_start` = #{userCareer.careerStart},
+            `career_end` = #{userCareer.careerEnd},
+            `company` = #{userCareer.company},
+            `job_title` = #{userCareer.jobTitle},
+            `description` = #{userCareer.description},
             `modified` = NOW()
     </insert>
-    <delete id="deleteUserCareer" parameterType="com.mainlab.model.UserCareer">
+    <delete id="deleteUserCareer" parameterType="map">
         DELETE FROM
             `user_career`
         WHERE
             `user_id` = #{userId}
-            AND `career_id` = #{careerId}
+            AND `career_id` = #{userCareer.careerId}
     </delete>
 </mapper>

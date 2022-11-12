@@ -29,16 +29,16 @@ public class UserSkillService {
         List<UserSkill> deletedUserSkillList = oldUserSkillList.stream()
                 .filter(userSkill -> !newUserSkillMap.containsKey(userSkill.getSkillId())).collect(Collectors.toList());
 
-        operationUnitList.add(() -> deleteUserSkillList(deletedUserSkillList));
-        operationUnitList.add(() -> upsertUserSkillList(newUserSkillList));
+        operationUnitList.add(() -> deleteUserSkillList(userId, deletedUserSkillList));
+        operationUnitList.add(() -> upsertUserSkillList(userId, newUserSkillList));
         return operationUnitList;
     }
 
-    private void upsertUserSkillList(List<UserSkill> userSkillList) {
-        userSkillRepository.upsertUserSkillList(userSkillList);
+    private void upsertUserSkillList(String userId, List<UserSkill> userSkillList) {
+        userSkillRepository.upsertUserSkillList(userId, userSkillList);
     }
 
-    private void deleteUserSkillList(List<UserSkill> userSkillList) {
-        userSkillRepository.deleteUserSkillList(userSkillList);
+    private void deleteUserSkillList(String userId, List<UserSkill> userSkillList) {
+        userSkillRepository.deleteUserSkillList(userId, userSkillList);
     }
 }

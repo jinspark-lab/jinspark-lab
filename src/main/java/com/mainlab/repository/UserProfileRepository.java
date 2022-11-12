@@ -1,5 +1,6 @@
 package com.mainlab.repository;
 
+import com.google.common.collect.ImmutableMap;
 import com.mainlab.model.UserProfile;
 import org.springframework.stereotype.Repository;
 
@@ -14,8 +15,7 @@ public class UserProfileRepository extends BaseRdbDaoSupport {
         return sqlSessionTemplate.selectOne(getMappedSql("selectUserProfile"), userId);
     }
 
-    //TODO: Need to fix to use userId more clean
     public void updateUserProfile(String userId, UserProfile userProfile) {
-        sqlSessionTemplate.update(getMappedSql("updateUserProfile"), userProfile);
+        sqlSessionTemplate.update(getMappedSql("updateUserProfile"), ImmutableMap.of("userId", userId, "userProfile", userProfile));
     }
 }

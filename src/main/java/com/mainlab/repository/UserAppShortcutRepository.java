@@ -17,13 +17,13 @@ public class UserAppShortcutRepository extends BaseRdbDaoSupport {
         return sqlSessionTemplate.selectList(getMappedSql("selectUserAppShortcutList"), userId);
     }
 
-    public void insertUserAppShortcut(UserAppShortcut userAppShortcut) {
-        sqlSessionTemplate.insert(getMappedSql("insertUserAppShortcut"), userAppShortcut);
+    public void insertUserAppShortcut(String userId, UserAppShortcut userAppShortcut) {
+        sqlSessionTemplate.insert(getMappedSql("insertUserAppShortcut"), ImmutableMap.of("userId", userId, "userAppShortcut", userAppShortcut));
         sqlSessionTemplate.flushStatements();
     }
 
-    public void updateUserAppShortcut(UserAppShortcut userAppShortcut) {
-        sqlSessionTemplate.update(getMappedSql("updateUserAppShortcut"), userAppShortcut);
+    public void updateUserAppShortcut(String userId, UserAppShortcut userAppShortcut) {
+        sqlSessionTemplate.update(getMappedSql("updateUserAppShortcut"), ImmutableMap.of("userId", userId, "userAppShortcut", userAppShortcut));
         sqlSessionTemplate.flushStatements();
     }
 

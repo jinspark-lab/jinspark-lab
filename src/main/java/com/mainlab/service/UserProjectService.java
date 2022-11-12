@@ -31,16 +31,16 @@ public class UserProjectService {
                 .filter(userProject -> !newUniqueUserProjectMap.containsKey(userProject.getUniqueProjectId()))
                 .collect(Collectors.toList());
 
-        operationUnitList.add(() -> deleteUserProjectList(deletedUserProjectList));
-        operationUnitList.add(() -> upsertUserProjectList(userProjectList));
+        operationUnitList.add(() -> deleteUserProjectList(userId, deletedUserProjectList));
+        operationUnitList.add(() -> upsertUserProjectList(userId, userProjectList));
         return operationUnitList;
     }
 
-    private void upsertUserProjectList(List<UserProject> userProjectList) {
-        userProjectRepository.upsertUserProjectList(userProjectList);
+    private void upsertUserProjectList(String userId, List<UserProject> userProjectList) {
+        userProjectRepository.upsertUserProjectList(userId, userProjectList);
     }
 
-    private void deleteUserProjectList(List<UserProject> userProjectList) {
-        userProjectRepository.deleteUserProjectList(userProjectList);
+    private void deleteUserProjectList(String userId, List<UserProject> userProjectList) {
+        userProjectRepository.deleteUserProjectList(userId, userProjectList);
     }
 }

@@ -34,8 +34,8 @@ public class UserCareerService {
         List<UserCareer> deletedUserCareerList = oldUserCareerList.stream()
                 .filter(userCareer -> !newUserCareerMap.containsKey(userCareer.getCareerId())).collect(Collectors.toList());
 
-        operationUnitList.add(() -> deleteUserCareerList(deletedUserCareerList));
-        operationUnitList.add(() -> upsertUserCareerList(userCareerList));
+        operationUnitList.add(() -> deleteUserCareerList(userId, deletedUserCareerList));
+        operationUnitList.add(() -> upsertUserCareerList(userId, userCareerList));
         return operationUnitList;
     }
 
@@ -43,11 +43,11 @@ public class UserCareerService {
         return userCareerRepository.selectUserCareerList(userId);
     }
 
-    private void upsertUserCareerList(List<UserCareer> userCareerList) {
-        userCareerRepository.upsertUserCareerList(userCareerList);
+    private void upsertUserCareerList(String userId, List<UserCareer> userCareerList) {
+        userCareerRepository.upsertUserCareerList(userId, userCareerList);
     }
 
-    private void deleteUserCareerList(List<UserCareer> userCareerList) {
-        userCareerRepository.deleteUserCareerList(userCareerList);
+    private void deleteUserCareerList(String userId, List<UserCareer> userCareerList) {
+        userCareerRepository.deleteUserCareerList(userId, userCareerList);
     }
 }
