@@ -19,7 +19,7 @@ public class ObjectConvertService {
 
     public <T> String objToString(T obj) {
         try {
-            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+            return objectMapper.writer().writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
