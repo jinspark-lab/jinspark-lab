@@ -12,24 +12,24 @@ public class ContentController extends BaseController {
     @Autowired
     private ContentService contentService;
 
-    /***
-     * Generate Content Link for Profile
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(value = "/linkProfile", method = RequestMethod.POST)
-    public ContentLinkResponse linkProfileContent() {
-        return new ContentLinkResponse(contentService.linkProfileContent());
-    }
-
-    /***
-     * Generate Content Link for UserApp
-     * @param appId
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(value = "/linkUserApp", method = RequestMethod.POST)
-    public ContentLinkResponse linkUserAppContent(@RequestParam(value = "appId") String appId) {
-        return new ContentLinkResponse(appId);
-    }
+//    /***
+//     * Generate Content Link for Profile
+//     * @return
+//     */
+//    @ResponseBody
+//    @RequestMapping(value = "/linkProfile", method = RequestMethod.POST)
+//    public ContentLinkResponse linkProfileContent() {
+//        return new ContentLinkResponse(contentService.linkProfileContent());
+//    }
+//
+//    /***
+//     * Generate Content Link for UserApp
+//     * @param appId
+//     * @return
+//     */
+//    @ResponseBody
+//    @RequestMapping(value = "/linkUserApp", method = RequestMethod.POST)
+//    public ContentLinkResponse linkUserAppContent(@RequestParam(value = "appId") String appId) {
+//        return new ContentLinkResponse(appId);
+//    }
 }
