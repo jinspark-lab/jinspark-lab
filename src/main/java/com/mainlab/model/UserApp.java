@@ -1,5 +1,8 @@
 package com.mainlab.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mainlab.model.content.ContentHashable;
+import com.mainlab.model.content.ContentType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +14,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserApp implements Serializable {
+public class UserApp implements Serializable, ContentHashable {
     private static final long serialVersionUID = -1245371694984418669L;
 
     private String userId;
@@ -22,4 +25,16 @@ public class UserApp implements Serializable {
     private String appPicture;
     private String architectureUrl;
     private String description;
+
+    @JsonIgnore
+    @Override
+    public String getContentKey() {
+        return userId + '_' + appId;
+    }
+
+    @JsonIgnore
+    @Override
+    public ContentType getContentType() {
+        return ContentType.USER_APP;
+    }
 }
