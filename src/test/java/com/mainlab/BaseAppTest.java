@@ -1,8 +1,10 @@
 package com.mainlab;
 
 import com.mainlab.common.OperationService;
+import com.mainlab.repository.SharableRepository;
 import com.mainlab.repository.UserAppRepository;
 import com.mainlab.repository.UserAppShortcutRepository;
+import com.mainlab.service.EnvironmentService;
 import com.mainlab.service.StorageService;
 import com.mainlab.service.UserAppService;
 import com.mainlab.service.UserProfileService;
@@ -31,4 +33,10 @@ public abstract class BaseAppTest {
 
     @Autowired
     protected UserAppShortcutRepository userAppShortcutRepository;
+
+    @Autowired
+    protected SharableRepository sharableRepository;
+
+    @Autowired
+    protected EnvironmentService environmentService;
 }

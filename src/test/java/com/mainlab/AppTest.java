@@ -6,6 +6,8 @@ import com.mainlab.model.UserApp;
 import com.mainlab.model.UserAppRequest;
 import com.mainlab.model.UserAppShortcut;
 import com.mainlab.model.UserProfileResponse;
+import com.mainlab.model.content.ContentType;
+import com.mainlab.model.content.SharableContent;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,8 +44,14 @@ public class AppTest extends BaseAppTest {
 
     @Test
     public void testStorage() {
-        Optional<Bucket> staticBucket = storageService.getS3Client().listBuckets().buckets().stream().filter(bucket -> bucket.name().equals("jinspark-lab-static-resource-bucket")).findAny();
+        Optional<Bucket> staticBucket = environmentService.getS3Client().listBuckets().buckets().stream().filter(bucket -> bucket.name().equals("jinspark-lab-static-resource-bucket")).findAny();
         assertTrue(staticBucket.isPresent());
+    }
+
+    @Test
+    public void testDynamoDB() {
+        SharableContent sharableContent = sharableRepository.selectSharableContent("Test_Content");
+        assertEquals(sharableContent.getContentType(), ContentType.PROFILE);
     }
 
     @Test

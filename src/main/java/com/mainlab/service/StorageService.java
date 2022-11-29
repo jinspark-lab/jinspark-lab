@@ -20,10 +20,6 @@ public class StorageService {
     @Autowired
     private EnvironmentService environmentService;
 
-    public S3Client getS3Client() {
-        return S3Client.builder().region(environmentService.getAwsServiceRegion()).build();
-    }
-
     private String generateRandomPartitionKey() {
         int leftLimit = 48;
         int rightLimit = 122;
@@ -37,7 +33,7 @@ public class StorageService {
     }
 
     public String uploadObjectToS3(MultipartFile multipartFile) {
-        S3Client s3Client = getS3Client();
+        S3Client s3Client = environmentService.getS3Client();
         try {
             String keyName = generateRandomPartitionKey() + multipartFile.getOriginalFilename();
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -55,7 +51,7 @@ public class StorageService {
     }
 
     public void deleteObjectFromS3(String objectPath) {
-        S3Client s3Client = getS3Client();
+        S3Client s3Client = environmentService.getS3Client();
         System.out.println(objectPath + " has been deleted.");
         DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
                 .bucket(environmentService.getResourceBucketName())
