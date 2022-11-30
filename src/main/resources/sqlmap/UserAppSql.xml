@@ -17,6 +17,21 @@
             `user_id` = #{userId}
             AND `app_id` = #{appId}
     </select>
+    <select id="selectUserAppList" parameterType="string" resultType="com.mainlab.model.UserApp">
+        SELECT
+            `user_id` as `userId`,
+            `app_id` as `appId`,
+            `repo_link` as `repoLink`,
+            `intro_text` as `introText`,
+            `app_link` as `appLink`,
+            `app_picture` as `appPicture`,
+            `architecture_url` as `architectureUrl`,
+            `description` as `description`
+        FROM
+            `user_app`
+        WHERE
+            `user_id` = #{userId}
+    </select>
     <insert id="insertUserApp" parameterType="map">
         INSERT INTO
             `user_app`

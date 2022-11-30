@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ContentLinkSql">
+    <select id="selectContentLink" parameterType="string" resultType="com.mainlab.model.content.SharableContent">
+        SELECT
+            `content_id` as `contentId`,
+            `user_id` as `userId`,
+            `content_type` as `contentType`
+        FROM
+            `content_link`
+        WHERE
+            `content_id` = #{contentId}
+    </select>
+    <select id="selectContentLinkListByUser" parameterType="string" resultType="com.mainlab.model.content.SharableContent">
+        SELECT
+            `content_id` as `contentId`,
+            `user_id` as `userId`,
+            `content_type` as `contentType`
+        FROM
+            `content_link`
+        WHERE
+            `user_id` = #{userId}
+    </select>
+    <insert id="insertContentLink" parameterType="com.mainlab.model.content.SharableContent">
+        INSERT INTO
+            `content_link`
+        (
+            `content_id`,
+            `user_id`,
+            `content_type`,
+            `created`,
+            `modified`
+        ) VALUES
+        (
+            #{contentId},
+            #{userId},
+            #{contentType},
+            NOW(),
+            NOW()
+        )
+    </insert>
+    <delete id="deleteContentLink" parameterType="string">
+        DELETE FROM
+            `content_link`
+        WHERE
+            `content_id` = #{contentId}
+    </delete>
+</mapper>

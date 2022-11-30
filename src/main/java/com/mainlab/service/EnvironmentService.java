@@ -13,27 +13,13 @@ import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRespon
 @Service
 public class EnvironmentService {
 
-    @Value("${storage.bucket.name}")
-    private String bucketName;
-
     @Autowired
     private Region region;
 
-    @Autowired
-    private S3Client s3Client;
 
     public Region getAwsServiceRegion() {
         return region;
     }
-
-    public S3Client getS3Client() {
-        return s3Client;
-    }
-
-
-    public String getResourceBucketName() {
-        return bucketName;
-    };
 
     @Cacheable(value = "secretsManagerParam", key = "#secretName")
     public String getStringValue(String secretName) {

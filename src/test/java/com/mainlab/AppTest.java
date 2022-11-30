@@ -44,7 +44,7 @@ public class AppTest extends BaseAppTest {
 
     @Test
     public void testStorage() {
-        Optional<Bucket> staticBucket = environmentService.getS3Client().listBuckets().buckets().stream().filter(bucket -> bucket.name().equals("jinspark-lab-static-resource-bucket")).findAny();
+        Optional<Bucket> staticBucket = storageService.getS3Client().listBuckets().buckets().stream().filter(bucket -> bucket.name().equals("jinspark-lab-static-resource-bucket")).findAny();
         assertTrue(staticBucket.isPresent());
     }
 
@@ -87,6 +87,14 @@ public class AppTest extends BaseAppTest {
         UserAppShortcut userAppShortcutFromDB = userAppShortcutRepository.selectUserAppShortcutList(uid).stream().filter(userAppShortcut -> userAppShortcut.getAppId().equals(appId)).findAny().get();
         assertEquals(userAppFromDB.getRepoLink(), repoLink);
         assertEquals(userAppShortcutFromDB.getThumbnailUrl(), thumbnailUrl);
+    }
+
+    @Test
+    public void testUserSharables() {
+        String userId = "jinsangp@gmail.com";
+        Optional<SharableContent> sharableProfileOptional = contentLinkRepository.selectSharableContentList(userId).stream()
+                .filter(sharableContent -> sharableContent.getContentType() == ContentType.PROFILE).findAny();
+        sharableProfileOptional.ifPresent(sharableContent -> assertEquals(userId, sharableContent.getContentId()));
     }
 
     @After
