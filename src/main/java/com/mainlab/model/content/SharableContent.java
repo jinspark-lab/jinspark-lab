@@ -11,11 +11,11 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContentLink implements Serializable {
+public class SharableContent implements Serializable {
     private static final long serialVersionUID = -6193093376753844157L;
 
     private String contentId;
     private String userId;
     private ContentType contentType;
-    private String contentUrl;
+    private boolean shared;
 }

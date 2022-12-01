@@ -33,6 +33,7 @@ public enum ErrorCode {
     USER_APP_INVALID_REQUEST(2003),
 
     INVALID_CONTENT(3001),
+    CONTENT_NOT_EXISTS(3004),
 
     NOT_SUPPORTED(9001),
     ;

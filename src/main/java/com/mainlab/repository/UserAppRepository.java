@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.mainlab.model.UserApp;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class UserAppRepository extends BaseRdbDaoSupport {
     @Override
@@ -13,6 +15,10 @@ public class UserAppRepository extends BaseRdbDaoSupport {
 
     public UserApp selectUserApp(String userId, String appId) {
         return sqlSessionTemplate.selectOne(getMappedSql("selectUserApp"), ImmutableMap.of("userId", userId, "appId", appId));
+    }
+
+    public List<UserApp> selectUserAppList(String userId) {
+        return sqlSessionTemplate.selectList(getMappedSql("selectUserAppList"), userId);
     }
 
     public void insertUserApp(String userId, UserApp userApp) {

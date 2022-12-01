@@ -6,6 +6,8 @@ import com.mainlab.model.UserApp;
 import com.mainlab.model.UserAppRequest;
 import com.mainlab.model.UserAppShortcut;
 import com.mainlab.model.UserProfileResponse;
+import com.mainlab.model.content.ContentType;
+import com.mainlab.model.content.SharableContent;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +49,12 @@ public class AppTest extends BaseAppTest {
     }
 
     @Test
+    public void testDynamoDB() {
+        SharableContent sharableContent = sharableRepository.selectSharableContent("Test_Content");
+        assertEquals(sharableContent.getContentType(), ContentType.PROFILE);
+    }
+
+    @Test
     public void testUserApp() {
         String uid = "tester";
         String appId = "TestUserApp";
@@ -79,6 +87,14 @@ public class AppTest extends BaseAppTest {
         UserAppShortcut userAppShortcutFromDB = userAppShortcutRepository.selectUserAppShortcutList(uid).stream().filter(userAppShortcut -> userAppShortcut.getAppId().equals(appId)).findAny().get();
         assertEquals(userAppFromDB.getRepoLink(), repoLink);
         assertEquals(userAppShortcutFromDB.getThumbnailUrl(), thumbnailUrl);
+    }
+
+    @Test
+    public void testUserSharables() {
+        String userId = "jinsangp@gmail.com";
+        Optional<SharableContent> sharableProfileOptional = contentLinkRepository.selectSharableContentList(userId).stream()
+                .filter(sharableContent -> sharableContent.getContentType() == ContentType.PROFILE).findAny();
+        sharableProfileOptional.ifPresent(sharableContent -> assertEquals(userId, sharableContent.getContentId()));
     }
 
     @After

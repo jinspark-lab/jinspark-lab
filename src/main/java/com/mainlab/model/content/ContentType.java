@@ -7,8 +7,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 public enum ContentType {
-    PROFILE,
-    USER_APP,
+    PROFILE("http://www.profileservice.url"),
+    USER_APP("http://www.userappservice.url"),
     ;
+
+    private String contentUrl;
+
+
 
 }

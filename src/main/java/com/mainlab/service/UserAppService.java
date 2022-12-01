@@ -43,6 +43,11 @@ public class UserAppService {
                         , ErrorCode.USER_APP_NOT_EXIST));
     }
 
+    public List<UserApp> getUserAppDetailList() {
+        String queryUserId = userService.getOperationUserId(OperationType.READ);
+        return userAppRepository.selectUserAppList(queryUserId);
+    }
+
     public UserAppResponse getUserAppAdminDetail(String appId) {
         UserApp userApp = getUserAppDetail(appId);
         UserAppShortcut userAppShortcut = getUserAppShortcutList().stream()
