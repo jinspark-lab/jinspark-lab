@@ -17,4 +17,5 @@ public class SharableContent implements Serializable {
     private String contentId;
     private String userId;
     private ContentType contentType;
+    private boolean shared;
 }

@@ -32,6 +32,7 @@ public class SharableRepository extends BaseDynamoDBSupport {
         attributeValueHashMap.put("userId", AttributeValue.builder().s(sharableContent.getUserId()).build());
         attributeValueHashMap.put("contentType", AttributeValue.builder().s(sharableContent.getContentType().toString()).build());
         attributeValueHashMap.put("contentUrl", AttributeValue.builder().s(sharableContent.getContentType().getContentUrl()).build());
+        attributeValueHashMap.put("shared", AttributeValue.builder().bool(sharableContent.isShared()).build());
 
         putItem(attributeValueHashMap);
     }

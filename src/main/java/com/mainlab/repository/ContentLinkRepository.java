@@ -1,5 +1,7 @@
 package com.mainlab.repository;
 
+import com.google.common.collect.ImmutableMap;
+import com.mainlab.model.content.ContentType;
 import com.mainlab.model.content.SharableContent;
 import org.springframework.stereotype.Repository;
 
@@ -19,8 +21,9 @@ public class ContentLinkRepository extends BaseRdbDaoSupport {
         return sqlSessionTemplate.selectList(getMappedSql("selectContentLinkListByUser"), userId);
     }
 
-    public void insertSharableContent(SharableContent sharableContent) {
-        sqlSessionTemplate.insert(getMappedSql("insertContentLink"), sharableContent);
+    public void upsertSharableContent(String userId, String contentId, ContentType contentType, boolean shared) {
+        sqlSessionTemplate.insert(getMappedSql("upsertContentLink"),
+                ImmutableMap.of("userId", userId, "contentId", contentId, "contentType", contentType, "shared", shared ? 1 : 0));
     }
 
     public void deleteSharableContent(String contentId) {
