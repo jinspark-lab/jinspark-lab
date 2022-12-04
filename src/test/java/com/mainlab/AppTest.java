@@ -50,6 +50,13 @@ public class AppTest extends BaseAppTest {
 
     @Test
     public void testDynamoDB() {
+        SharableContent newSharableContent = new SharableContent();
+        newSharableContent.setContentId("Test_Content");
+        newSharableContent.setUserId("Tester");
+        newSharableContent.setShared(false);
+        newSharableContent.setContentType(ContentType.PROFILE);
+        sharableRepository.insertSharableContent(newSharableContent);
+
         SharableContent sharableContent = sharableRepository.selectSharableContent("Test_Content");
         assertEquals(sharableContent.getContentType(), ContentType.PROFILE);
     }
@@ -92,9 +99,10 @@ public class AppTest extends BaseAppTest {
     @Test
     public void testUserSharables() {
         String userId = "jinsangp@gmail.com";
+        UserProfileResponse userProfile = userProfileService.getTestUserProfile();
         Optional<SharableContent> sharableProfileOptional = contentLinkRepository.selectSharableContentList(userId).stream()
                 .filter(sharableContent -> sharableContent.getContentType() == ContentType.PROFILE).findAny();
-        sharableProfileOptional.ifPresent(sharableContent -> assertEquals(userId, sharableContent.getContentId()));
+        sharableProfileOptional.ifPresent(sharableContent -> assertEquals(userProfile.getUserProfile().getContentId(), sharableContent.getContentId()));
     }
 
     @After
