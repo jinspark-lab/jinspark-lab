@@ -58,14 +58,46 @@ public class ContentService {
         List<OperationUnit> operationUnitList = Lists.newLinkedList();
 
         UserProfileSharable userProfileSharable = userSharablesRequest.getUserProfileSharable();
-        operationUnitList.add(() -> updateContentLink(queryUserId, userProfileSharable.getContentId(), ContentType.PROFILE, userProfileSharable.isShared()));
+
+        operationUnitList.add(new OperationUnit() {
+            @Override
+            public void operate() {
+                updateContentLink(queryUserId, userProfileSharable.getContentId(), ContentType.PROFILE, userProfileSharable.isShared());
+            }
+
+            @Override
+            public boolean isCallbackPossible() {
+                return true;
+            }
+
+            @Override
+            public void callback() {
+                contentLinkRepository.upsertSharableContent(queryUserId, userProfileSharable.getContentId(), ContentType.PROFILE, userProfileSharable.isShared());
+            }
+        });
+
         userSharablesRequest.getUserAppSharableList().forEach(userAppSharable ->
-                operationUnitList.add(() -> updateContentLink(queryUserId, userAppSharable.getContentId(), ContentType.USER_APP, userAppSharable.isShared())));
+                operationUnitList.add(new OperationUnit() {
+                    @Override
+                    public void operate() {
+                        updateContentLink(queryUserId, userAppSharable.getContentId(), ContentType.USER_APP, userAppSharable.isShared());
+                    }
+
+                    @Override
+                    public boolean isCallbackPossible() {
+                        return true;
+                    }
+
+                    @Override
+                    public void callback() {
+                        contentLinkRepository.upsertSharableContent(queryUserId, userAppSharable.getContentId(), ContentType.USER_APP, userAppSharable.isShared());
+                    }
+                }));
 
         operationService.operate(queryUserId, operationUnitList);
     }
 
-    public void updateContentLink(String userId, String contentId, ContentType contentType, boolean shared) {
+    private void updateContentLink(String userId, String contentId, ContentType contentType, boolean shared) {
         SharableContent sharableContent = new SharableContent();
         sharableContent.setContentId(contentId);
         sharableContent.setUserId(userId);
@@ -73,8 +105,5 @@ public class ContentService {
         sharableContent.setShared(shared);
 
         sharableRepository.insertSharableContent(sharableContent);
-
-        //TODO: Insert into RDB After
-        contentLinkRepository.upsertSharableContent(userId, contentId, contentType, shared);
     }
 }

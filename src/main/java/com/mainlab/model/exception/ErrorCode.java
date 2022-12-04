@@ -36,6 +36,7 @@ public enum ErrorCode {
     CONTENT_NOT_EXISTS(3004),
 
     NOT_SUPPORTED(9001),
+    INVALID_CONFIG(9002),
     ;
 
     int code;
