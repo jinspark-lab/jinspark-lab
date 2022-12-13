@@ -7,12 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 public enum ContentType {
-    PROFILE("http://www.profileservice.url"),
-    USER_APP("http://www.userappservice.url"),
+    PROFILE("https://es6b47ymad.execute-api.us-east-1.amazonaws.com/prod/profile"),
+    USER_APP("https://es6b47ymad.execute-api.us-east-1.amazonaws.com/prod/app"),
     ;
 
     private String contentUrl;
-
-
-
 }
