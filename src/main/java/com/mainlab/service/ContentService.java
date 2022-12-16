@@ -59,10 +59,11 @@ public class ContentService {
 
         UserProfileSharable userProfileSharable = userSharablesRequest.getUserProfileSharable();
 
+        // User Profile Transaction
         operationUnitList.add(new OperationUnit() {
             @Override
             public void operate() {
-                updateContentLink(queryUserId, userProfileSharable.getContentId(), ContentType.PROFILE, userProfileSharable.isShared());
+                putContentLink(queryUserId, userProfileSharable.getContentId(), ContentType.PROFILE, userProfileSharable.isShared());
             }
 
             @Override
@@ -76,11 +77,12 @@ public class ContentService {
             }
         });
 
+        // User App Transaction
         userSharablesRequest.getUserAppSharableList().forEach(userAppSharable ->
                 operationUnitList.add(new OperationUnit() {
                     @Override
                     public void operate() {
-                        updateContentLink(queryUserId, userAppSharable.getContentId(), ContentType.USER_APP, userAppSharable.isShared());
+                        putContentLink(queryUserId, userAppSharable.getContentId(), ContentType.USER_APP, userAppSharable.isShared());
                     }
 
                     @Override
@@ -97,7 +99,7 @@ public class ContentService {
         operationService.operate(queryUserId, operationUnitList);
     }
 
-    private void updateContentLink(String userId, String contentId, ContentType contentType, boolean shared) {
+    private void putContentLink(String userId, String contentId, ContentType contentType, boolean shared) {
         SharableContent sharableContent = new SharableContent();
         sharableContent.setContentId(contentId);
         sharableContent.setUserId(userId);
