@@ -9,7 +9,6 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class SharableRepository extends BaseDynamoDBSupport {
