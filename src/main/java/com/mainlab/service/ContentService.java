@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -77,25 +78,26 @@ public class ContentService {
             }
         });
 
-        // User App Transaction
-        userSharablesRequest.getUserAppSharableList().forEach(userAppSharable ->
-                operationUnitList.add(new OperationUnit() {
-                    @Override
-                    public void operate() {
-                        putContentLink(queryUserId, userAppSharable.getContentId(), ContentType.USER_APP, userAppSharable.isShared());
-                    }
+        Optional.ofNullable(userSharablesRequest.getUserAppSharableList()).ifPresent(userAppSharables -> {
+            // User App Transaction
+            userAppSharables.forEach(userAppSharable ->
+                    operationUnitList.add(new OperationUnit() {
+                        @Override
+                        public void operate() {
+                            putContentLink(queryUserId, userAppSharable.getContentId(), ContentType.USER_APP, userAppSharable.isShared());
+                        }
 
-                    @Override
-                    public boolean isCallbackPossible() {
-                        return true;
-                    }
+                        @Override
+                        public boolean isCallbackPossible() {
+                            return true;
+                        }
 
-                    @Override
-                    public void callback() {
-                        contentLinkRepository.upsertSharableContent(queryUserId, userAppSharable.getContentId(), ContentType.USER_APP, userAppSharable.isShared());
-                    }
-                }));
-
+                        @Override
+                        public void callback() {
+                            contentLinkRepository.upsertSharableContent(queryUserId, userAppSharable.getContentId(), ContentType.USER_APP, userAppSharable.isShared());
+                        }
+                    }));
+        });
         operationService.operate(queryUserId, operationUnitList);
     }
 
