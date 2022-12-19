@@ -14,7 +14,12 @@ Click => https://www.jinsparklab.com
 
 If you have shared link or contentId?
 
-Click => https://www.jinsparklab.com/share/{contentId}
+Profile Click => https://www.jinsparklab.com/share/profile/{contentId}
+
+App Click => https://www.jinsparklab.com/share/app/{contentId}
+
+For example, here is my profile application URL.
+: https://www.jinsparklab.com/share/profile/tDM8acbaDLfRDMzec4n8z13t
 
 ## How can I start?
 
