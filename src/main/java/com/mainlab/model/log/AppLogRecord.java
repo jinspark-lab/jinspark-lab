@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 @Getter
 @Builder
@@ -20,6 +22,7 @@ public class AppLogRecord {
 
     @JsonProperty("@timestamp")
     public String getTimestamp() {
-        return "" + dateTime.getMillis();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
+        return dateTimeFormatter.print(dateTime);
     }
 }
