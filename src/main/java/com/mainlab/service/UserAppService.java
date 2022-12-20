@@ -1,6 +1,7 @@
 package com.mainlab.service;
 
 import com.google.common.collect.Lists;
+import com.mainlab.common.ObjectConvertService;
 import com.mainlab.common.OperationService;
 import com.mainlab.common.OperationType;
 import com.mainlab.common.OperationUnit;
@@ -30,6 +31,10 @@ public class UserAppService {
     private UserService userService;
     @Autowired
     private OperationService operationService;
+    @Autowired
+    private AppLogService appLogService;
+    @Autowired
+    private ObjectConvertService objectConvertService;
 
     public List<UserAppShortcut> getUserAppShortcutList() {
         String queryUserId = userService.getOperationUserId(OperationType.READ);
@@ -76,6 +81,7 @@ public class UserAppService {
                         new UserAppShortcut(queryUserId, userApp.getAppId(), userAppRequest.getThumbnailUrl())));
 
         operationService.operate(queryUserId, operationUnitList);
+        appLogService.info("User App Added - " + objectConvertService.objToString(userAppRequest));
     }
 
     public void updateUserApp(UserAppRequest userAppRequest) {
@@ -88,6 +94,7 @@ public class UserAppService {
         operationUnitList.add(() -> userAppRepository.updateUserApp(queryUserId, userAppRequest.getUserApp()));
         operationUnitList.add(() -> userAppShortcutRepository.updateUserAppShortcut(queryUserId, userAppShortcut));
         operationService.operate(queryUserId, operationUnitList);
+        appLogService.info("User App Updated - " + objectConvertService.objToString(userAppRequest));
     }
 
     public void deleteUserApp(String appId) {
@@ -97,5 +104,6 @@ public class UserAppService {
         operationUnitList.add(() -> userAppShortcutRepository.deleteUserAppShortcut(queryUserId, appId));
         operationUnitList.add(() -> userAppRepository.deleteUserApp(queryUserId, appId));
         operationService.operate(queryUserId, operationUnitList);
+        appLogService.info("User App Deleted - appId: " + appId);
     }
 }
