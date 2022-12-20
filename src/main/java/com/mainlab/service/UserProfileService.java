@@ -1,5 +1,6 @@
 package com.mainlab.service;
 
+import com.mainlab.common.ObjectConvertService;
 import com.mainlab.common.OperationService;
 import com.mainlab.common.OperationType;
 import com.mainlab.common.OperationUnit;
@@ -32,6 +33,10 @@ public class UserProfileService {
     private UserProjectService userProjectService;
     @Autowired
     private OperationService operationService;
+    @Autowired
+    private AppLogService appLogService;
+    @Autowired
+    private ObjectConvertService objectConvertService;
 
     private UserProfile getUserProfile(String userId) {
         return userProfileRepository.selectUserProfile(userId);
@@ -84,5 +89,6 @@ public class UserProfileService {
         operationUnitList.addAll(userProjectService.processUpdateUserProjectList(queryUserId, userProjectList));
 
         operationService.operate(queryUserId, operationUnitList);
+        appLogService.info("Update User Profile : " + objectConvertService.objToString(userProfileRequest));
     }
 }

@@ -5,6 +5,7 @@ import com.mainlab.model.exception.AuthorizationException;
 import com.mainlab.model.exception.ErrorCode;
 import com.mainlab.model.exception.ErrorCodes;
 import com.mainlab.model.exception.TokenExpiredException;
+import com.mainlab.service.AppLogService;
 import com.mainlab.service.AuthService;
 import com.mainlab.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     private AuthService authService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private AppLogService appLogService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -48,13 +51,16 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
                 // Save User Info to SecurityContextHolder
                 userService.setUserContextHolder(userInfo);
+                appLogService.info("User has been logged in - " + userInfo.getUserId());
 
                 return super.preHandle(request, response, handler);
             } catch (AuthorizationException e) {
                 // Access token is expired, requests to call /refresh API
+                appLogService.info("Access token is expired - " + jwtHeader.substring(7));
                 response.setStatus(ErrorCode.UNAUTHORIZED.getCode());
             } catch (TokenExpiredException e) {
                 // Refresh token is expired, requests re-login
+                appLogService.info("Session Expired - " + jwtHeader.substring(7));
                 response.setStatus(ErrorCode.AUTH_OVERDUE.getCode());
             }
         }
