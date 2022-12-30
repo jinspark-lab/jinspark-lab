@@ -6,6 +6,7 @@ import com.mainlab.model.UserApp;
 import com.mainlab.model.UserAppRequest;
 import com.mainlab.model.UserAppShortcut;
 import com.mainlab.model.UserProfileResponse;
+import com.mainlab.model.blog.UserBlog;
 import com.mainlab.model.content.ContentType;
 import com.mainlab.model.content.SharableContent;
 import org.junit.After;
@@ -103,6 +104,13 @@ public class AppTest extends BaseAppTest {
         Optional<SharableContent> sharableProfileOptional = contentLinkRepository.selectSharableContentList(userId).stream()
                 .filter(sharableContent -> sharableContent.getContentType() == ContentType.PROFILE).findAny();
         sharableProfileOptional.ifPresent(sharableContent -> assertEquals(userProfile.getUserProfile().getContentId(), sharableContent.getContentId()));
+    }
+
+    @Test
+    public void testUserBlog() {
+        String userId = "jinsangp@gmail.com";
+        UserBlog userBlog = userBlogRepository.selectUserBlog(userId, 0);
+        assertEquals(userBlog.getContent(), "Test");
     }
 
     @After

@@ -20,10 +20,19 @@ public class UserSharablesResponse implements Serializable {
     private UserProfileSharable userProfileSharable;
     private List<UserAppSharable> userAppSharableList;
 
+    private List<UserBlogSharable> userBlogSharableList;
+
     public void addUserApp(UserAppSharable userAppSharable) {
         if (Optional.ofNullable(userAppSharableList).isEmpty()) {
             userAppSharableList = new LinkedList<>();
         }
         userAppSharableList.add(userAppSharable);
+    }
+
+    public void addUserBlog(UserBlogSharable userBlogSharable) {
+        if (Optional.ofNullable(userBlogSharableList).isEmpty()) {
+            userBlogSharableList = new LinkedList<>();
+        }
+        userBlogSharableList.add(userBlogSharable);
     }
 }

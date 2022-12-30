@@ -6,6 +6,7 @@ import com.mainlab.common.OperationType;
 import com.mainlab.common.OperationUnit;
 import com.mainlab.model.UserApp;
 import com.mainlab.model.UserProfile;
+import com.mainlab.model.blog.UserBlog;
 import com.mainlab.model.content.*;
 import com.mainlab.repository.ContentLinkRepository;
 import com.mainlab.repository.SharableRepository;
@@ -27,6 +28,8 @@ public class ContentService {
     @Autowired
     private UserAppService userAppService;
     @Autowired
+    private UserBlogService userBlogService;
+    @Autowired
     private ContentLinkRepository contentLinkRepository;
     @Autowired
     private SharableRepository sharableRepository;
@@ -36,6 +39,7 @@ public class ContentService {
     public UserSharablesResponse listUserSharables() {
         UserProfile userProfile = userProfileService.getCompleteUserProfile().getUserProfile();
         List<UserApp> userAppList = userAppService.getUserAppDetailList();
+        List<UserBlog> userBlogList = userBlogService.getUserBlogList();
 
         String userId = userProfile.getUserId();
         Map<String, SharableContent> sharableContentMap = contentLinkRepository.selectSharableContentList(userId)
@@ -50,6 +54,10 @@ public class ContentService {
         userAppList.forEach(userApp -> userSharablesResponse
                 .addUserApp(new UserAppSharable(userId, userApp.getAppId(), userApp.getContentType(), userApp.getContentId(), userApp.getContentLink(),
                         sharableContentMap.containsKey(userApp.getContentId()) && sharableContentMap.get(userApp.getContentId()).isShared())));
+
+        userBlogList.forEach(userBlog -> userSharablesResponse
+                .addUserBlog(new UserBlogSharable(userId, userBlog.getBlogId(), userBlog.getContentType(), userBlog.getContentId(), userBlog.getContentLink(),
+                        sharableContentMap.containsKey(userBlog.getContentId()) && sharableContentMap.get(userBlog.getContentId()).isShared())));
 
         return userSharablesResponse;
     }
@@ -98,6 +106,26 @@ public class ContentService {
                         }
                     }));
         });
+
+        Optional.ofNullable(userSharablesRequest.getUserBlogSharableList()).ifPresent(userBlogSharables -> {
+            // User Blog Transaction
+            userBlogSharables.forEach(userBlogSharable ->
+                    operationUnitList.add(new OperationUnit() {
+                        @Override
+                        public void operate() {
+                            putContentLink(queryUserId, userBlogSharable.getContentId(), ContentType.BLOG, userBlogSharable.isShared());
+                        }
+
+                        public boolean isCallbackPossible() {
+                            return true;
+                        }
+
+                        public void callback() {
+                            contentLinkRepository.upsertSharableContent(queryUserId, userBlogSharable.getContentId(), ContentType.BLOG, userBlogSharable.isShared());
+                        }
+                    }));
+        });
+
         operationService.operate(queryUserId, operationUnitList);
     }
 
