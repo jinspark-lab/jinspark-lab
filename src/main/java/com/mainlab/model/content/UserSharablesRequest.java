@@ -17,4 +17,5 @@ public class UserSharablesRequest implements Serializable {
 
     private UserProfileSharable userProfileSharable;
     private List<UserAppSharable> userAppSharableList;
+    private List<UserBlogSharable> userBlogSharableList;
 }

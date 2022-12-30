@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserBlogSql">
+    <select id="selectUserBlog" parameterType="map" resultType="com.mainlab.model.blog.UserBlog">
+        SELECT
+            `user_id` as `userId`,
+            `blog_id` as `blogId`,
+            `title` as `title`,
+            `content` as `content`
+        FROM
+            `user_blog`
+        WHERE
+            `user_id` = #{userId}
+            AND `blog_id` = #{blogId}
+    </select>
+    <select id="selectUserBlogList" parameterType="string" resultType="com.mainlab.model.blog.UserBlog">
+        SELECT
+            `user_id` as `userId`,
+            `blog_id` as `blogId`,
+            `title` as `title`
+        FROM
+            `user_blog`
+        WHERE
+            `user_id` = #{userId}
+    </select>
+    <insert id="insertUserBlog" parameterType="map">
+        INSERT INTO
+            `user_blog`
+        (
+            `user_id`,
+            `blog_id`,
+            `title`,
+            `content`,
+            `created`,
+            `modified`
+        ) VALUES
+        (
+            #{userId},
+            #{userBlog.blogId},
+            #{userBlog.title},
+            #{userBlog.content},
+            NOW(),
+            NOW()
+        )
+    </insert>
+    <update id="updateUserBlog" parameterType="map">
+        UPDATE
+            `user_blog`
+        SET
+            `blog_id` = #{userBlog.blogId},
+            `title` = #{userBlog.title},
+            `content` = #{userBlog.content},
+            `modified` = NOW()
+        WHERE
+            `user_id` = #{userId}
+            AND `blog_id` = #{userBlog.blogId}
+    </update>
+    <delete id="deleteUserBlog" parameterType="map">
+        DELETE FROM
+            `user_blog`
+        WHERE
+            `user_id` = #{userId}
+            AND `blog_id` = #{blogId}
+    </delete>
+</mapper>

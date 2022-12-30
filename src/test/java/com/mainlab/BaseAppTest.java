@@ -1,10 +1,7 @@
 package com.mainlab;
 
 import com.mainlab.common.OperationService;
-import com.mainlab.repository.ContentLinkRepository;
-import com.mainlab.repository.SharableRepository;
-import com.mainlab.repository.UserAppRepository;
-import com.mainlab.repository.UserAppShortcutRepository;
+import com.mainlab.repository.*;
 import com.mainlab.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -43,4 +40,9 @@ public abstract class BaseAppTest {
 
     @Autowired
     protected ContentLinkRepository contentLinkRepository;
+
+    @Autowired
+    protected UserBlogService userBlogService;
+    @Autowired
+    protected UserBlogRepository userBlogRepository;
 }
