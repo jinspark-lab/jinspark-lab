@@ -45,4 +45,6 @@ public abstract class BaseAppTest {
     protected UserBlogService userBlogService;
     @Autowired
     protected UserBlogRepository userBlogRepository;
+    @Autowired
+    protected MessageService messageService;
 }
