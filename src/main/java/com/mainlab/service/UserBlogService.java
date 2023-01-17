@@ -35,6 +35,10 @@ public class UserBlogService {
 
     public UserBlog getUserBlog(int blogId) {
         String userId = userService.getOperationUserId(OperationType.READ);
+        return getUserBlog(userId, blogId);
+    }
+
+    public UserBlog getUserBlog(String userId, int blogId) {
         UserBlog userBlog = userBlogRepository.selectUserBlog(userId, blogId);
         ErrorCodes.checkCondition(Optional.ofNullable(userBlog).isPresent(), ErrorCode.USER_BLOG_NOT_EXIST,
                 "User Blog does not exist. userId=" + userId + " blogId=" + blogId);
