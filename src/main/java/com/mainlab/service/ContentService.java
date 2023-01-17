@@ -6,10 +6,13 @@ import com.mainlab.common.OperationType;
 import com.mainlab.common.OperationUnit;
 import com.mainlab.model.UserApp;
 import com.mainlab.model.UserProfile;
+import com.mainlab.model.UserProfileResponse;
 import com.mainlab.model.blog.UserBlog;
 import com.mainlab.model.content.*;
 import com.mainlab.repository.ContentLinkRepository;
-import com.mainlab.repository.SharableRepository;
+import com.mainlab.repository.dynamo.BlogRepository;
+import com.mainlab.repository.dynamo.ProfileRepository;
+import com.mainlab.repository.dynamo.SharableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,10 @@ public class ContentService {
     private ContentLinkRepository contentLinkRepository;
     @Autowired
     private SharableRepository sharableRepository;
+    @Autowired
+    private ProfileRepository profileRepository;
+    @Autowired
+    private BlogRepository blogRepository;
     @Autowired
     private OperationService operationService;
 
@@ -73,6 +80,7 @@ public class ContentService {
             @Override
             public void operate() {
                 putContentLink(queryUserId, userProfileSharable.getContentId(), ContentType.PROFILE, userProfileSharable.isShared());
+                putProfileContent(queryUserId, userProfileSharable.getContentId());
             }
 
             @Override
@@ -114,6 +122,7 @@ public class ContentService {
                         @Override
                         public void operate() {
                             putContentLink(queryUserId, userBlogSharable.getContentId(), ContentType.BLOG, userBlogSharable.isShared());
+                            putBlogContent(queryUserId, userBlogSharable.getContentId(), userBlogSharable.getBlogId());
                         }
 
                         public boolean isCallbackPossible() {
@@ -137,5 +146,15 @@ public class ContentService {
         sharableContent.setShared(shared);
 
         sharableRepository.insertSharableContent(sharableContent);
+    }
+
+    private void putProfileContent(String userId, String contentId) {
+        UserProfileResponse userProfileResponse = userProfileService.getCompleteUserProfile(userId);
+        profileRepository.insertProfileContent(contentId, userProfileResponse);
+    }
+
+    private void putBlogContent(String userId, String contentId, int blogId) {
+        UserBlog userBlog = userBlogService.getUserBlog(userId, blogId);
+        blogRepository.insertBlogContent(contentId, userBlog.getContent());
     }
 }

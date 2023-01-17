@@ -64,9 +64,12 @@ public class UserProfileService {
     }
 
     public UserProfileResponse getCompleteUserProfile() {
-        UserProfileResponse userProfileResponse = new UserProfileResponse();
         String queryUserId = userService.getOperationUserId(OperationType.READ);
+        return getCompleteUserProfile(queryUserId);
+    }
 
+    public UserProfileResponse getCompleteUserProfile(String queryUserId) {
+        UserProfileResponse userProfileResponse = new UserProfileResponse();
         Optional.of(getUserProfile(queryUserId)).ifPresent(userProfile -> {
             userProfileResponse.setUserProfile(userProfile);
             userProfileResponse.setUserSkillList(userSkillService.getUserSkillList(queryUserId));

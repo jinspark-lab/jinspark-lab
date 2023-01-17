@@ -2,6 +2,7 @@ package com.mainlab;
 
 import com.mainlab.common.OperationService;
 import com.mainlab.repository.*;
+import com.mainlab.repository.dynamo.SharableRepository;
 import com.mainlab.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
