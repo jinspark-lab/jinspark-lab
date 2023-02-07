@@ -4,6 +4,10 @@ phases:
   install:
     runtime-versions:
       java: corretto11
+    commands:
+      - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+      - chmod +x kubectl
+      - mv ./kubectl /usr/local/bin/kubectl
   pre_build:
     commands:
       - echo logging into docker
@@ -22,6 +26,10 @@ phases:
     commands:
       - echo Build Completed. Create image definition file...
       - printf '[{"name":"jinspark-lab","imageUri":"%s"}]' $ecr:$tag > imagedefinitions.json
+      - echo Deploy Image to EKS Cluster...
+      - aws eks update-kubeconfig --name JinsparkLabEks --region us-east-1 --role-arn arn:aws:iam::486403792456:role/UserAdmin
+      - echo kubectl set image deployment/jinsparklab-kubedeploy backend=$ecr:$tag
+      - kubectl set image deployment/jinsparklab-kubedeploy backend=$ecr:$tag
 artifacts:
   files:
     - imagedefinitions.json

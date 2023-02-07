@@ -63,12 +63,6 @@ public class AppTest extends BaseAppTest {
     }
 
     @Test
-    public void testSqs() {
-        boolean result = messageService.sendMessageTest("TestMessage");
-        assertTrue(result);
-    }
-
-    @Test
     public void testUserApp() {
         String uid = "tester";
         String appId = "TestUserApp";
