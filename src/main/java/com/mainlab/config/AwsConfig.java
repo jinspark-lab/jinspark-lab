@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.sqs.SqsClient;
 
 @Configuration
@@ -28,5 +29,10 @@ public class AwsConfig {
     @Bean(name = "sqsClient")
     public SqsClient sqsClient() {
         return SqsClient.builder().region(region()).build();
+    }
+
+    @Bean(name = "secretsManagerClient")
+    public SecretsManagerClient secretsManagerClient() {
+        return SecretsManagerClient.builder().region(region()).build();
     }
 }
