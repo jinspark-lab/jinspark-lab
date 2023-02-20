@@ -60,6 +60,7 @@ public class UserProfileService {
 
     @Cacheable(value = "testUserProfile", key = "#key")
     public UserProfileResponse getTestUserProfile(String key) {
+        //FIXME: Cache it to Ehcache automatically
         return getTestUserProfile();
     }
 
