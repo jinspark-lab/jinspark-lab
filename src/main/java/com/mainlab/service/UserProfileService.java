@@ -59,8 +59,12 @@ public class UserProfileService {
     }
 
     @Cacheable(value = "testUserProfile", key = "#key")
-    public UserProfileResponse getTestUserProfile(String key) {
-        //FIXME: Cache it to Ehcache automatically
+    public UserProfileResponse getEhcacheTestUserProfile(String key) {
+        return getTestUserProfile();
+    }
+
+    @Cacheable(value = "redisTestProfile", key = "#key")
+    public UserProfileResponse getRedisTestUserProfile(String key) {
         return getTestUserProfile();
     }
 
