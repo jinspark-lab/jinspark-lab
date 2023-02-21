@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,7 +23,8 @@ public class UserCareerService {
     public List<UserCareer> getCompleteUserCareerList(String userId) {
         List<UserCareer> userCareerList = getUserCareerList(userId);
         Map<Integer, List<UserProject>> userProjectMap = userProjectService.getUserProjectList(userId).stream().collect(Collectors.groupingBy(UserProject::getCareerId));
-        userCareerList.forEach(userCareer -> userCareer.setUserProjectList(userProjectMap.get(userCareer.getCareerId())));
+        userCareerList.stream().filter(userCareer -> userProjectMap.containsKey(userCareer.getCareerId()))
+                .forEach(userCareer -> userCareer.setUserProjectList(userProjectMap.get(userCareer.getCareerId())));
         return userCareerList;
     }
 
@@ -40,7 +42,15 @@ public class UserCareerService {
     }
 
     private List<UserCareer> getUserCareerList(String userId) {
-        return userCareerRepository.selectUserCareerList(userId);
+        // Get User Career Sorted by start - end date pair
+        return userCareerRepository.selectUserCareerList(userId).stream()
+                .sorted((o1, o2) -> {
+                    long end1 = Optional.ofNullable(o1.getCareerEnd()).isPresent() ? o1.getCareerEnd().getMillis() : Long.MAX_VALUE;
+                    long end2 = Optional.ofNullable(o2.getCareerEnd()).isPresent() ? o2.getCareerEnd().getMillis() : Long.MAX_VALUE;
+                    return end2 == end1
+                            ? Long.compare(o2.getCareerStart().getMillis(), o1.getCareerStart().getMillis())
+                            : Long.compare(end2, end1);
+                }).collect(Collectors.toList());
     }
 
     private void upsertUserCareerList(String userId, List<UserCareer> userCareerList) {
