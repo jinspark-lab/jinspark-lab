@@ -36,11 +36,17 @@ public class AppTest extends BaseAppTest {
 
     @Test
     public void testCache() {
-        UserProfileResponse userProfileResponse = userProfileService.getTestUserProfile("test");
+        UserProfileResponse userProfileResponse = userProfileService.getEhcacheTestUserProfile("test");
         Optional<UserProfileResponse> cachedResponse = Optional.ofNullable(cacheManager.getCache("testUserProfile"))
                 .map(cache -> cache.get("test", UserProfileResponse.class));
         assertTrue(cachedResponse.isPresent());
         assertEquals(userProfileResponse.getUserProfile().getUserId(), cachedResponse.get().getUserProfile().getUserId());
+
+        UserProfileResponse userProfileResponse1 = userProfileService.getRedisTestUserProfile("test");
+        Optional<UserProfileResponse> cachedResponse1 = Optional.ofNullable(cacheManager.getCache("testUserProfile"))
+                .map(cache -> cache.get("test", UserProfileResponse.class));
+        assertTrue(cachedResponse1.isPresent());
+        assertEquals(userProfileResponse1.getUserProfile().getUserId(), cachedResponse1.get().getUserProfile().getUserId());
     }
 
     @Test
