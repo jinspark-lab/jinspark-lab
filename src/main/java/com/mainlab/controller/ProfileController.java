@@ -23,7 +23,7 @@ public class ProfileController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public SuccessResponse updateAndGetUserProfile(@RequestBody UserProfileRequest userProfileRequest) {
-        userProfileService.getProcessedUserProfile(userProfileRequest);
+        userProfileService.updateCompleteUserProfile(userProfileRequest);
         return new SuccessResponse();
     }
 }
