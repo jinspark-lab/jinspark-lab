@@ -53,18 +53,34 @@ public class ContentService {
                 .stream().collect(Collectors.toMap(SharableContent::getContentId, sharableContent -> sharableContent));
 
         UserSharablesResponse userSharablesResponse = new UserSharablesResponse();
-        UserProfileSharable userProfileSharable =
-                new UserProfileSharable(userId, userProfile.getContentType(), userProfile.getContentId(), userProfile.getContentLink(),
-                        sharableContentMap.containsKey(userProfile.getContentId()) && sharableContentMap.get(userProfile.getContentId()).isShared());
+        UserProfileSharable userProfileSharable = UserProfileSharable.builder()
+                .userId(userId)
+                .contentType(userProfile.getContentType())
+                .contentId(userProfile.getContentId())
+                .contentLink(userProfile.getContentLink())
+                .shared(sharableContentMap.containsKey(userProfile.getContentId()) && sharableContentMap.get(userProfile.getContentId()).isShared())
+                .build();
         userSharablesResponse.setUserProfileSharable(userProfileSharable);
 
         userAppList.forEach(userApp -> userSharablesResponse
-                .addUserApp(new UserAppSharable(userId, userApp.getAppId(), userApp.getContentType(), userApp.getContentId(), userApp.getContentLink(),
-                        sharableContentMap.containsKey(userApp.getContentId()) && sharableContentMap.get(userApp.getContentId()).isShared())));
+                .addUserApp(UserAppSharable.builder()
+                        .userId(userId)
+                        .appId(userApp.getAppId())
+                        .contentType(userApp.getContentType())
+                        .contentId(userApp.getContentId())
+                        .contentLink(userApp.getContentLink())
+                        .shared(sharableContentMap.containsKey(userApp.getContentId()) && sharableContentMap.get(userApp.getContentId()).isShared())
+                        .build()));
 
         userBlogList.forEach(userBlog -> userSharablesResponse
-                .addUserBlog(new UserBlogSharable(userId, userBlog.getBlogId(), userBlog.getContentType(), userBlog.getContentId(), userBlog.getContentLink(),
-                        sharableContentMap.containsKey(userBlog.getContentId()) && sharableContentMap.get(userBlog.getContentId()).isShared())));
+                        .addUserBlog(UserBlogSharable.builder()
+                                .userId(userId)
+                                .blogId(userBlog.getBlogId())
+                                .contentType(userBlog.getContentType())
+                                .contentId(userBlog.getContentId())
+                                .contentLink(userBlog.getContentLink())
+                                .shared(sharableContentMap.containsKey(userBlog.getContentId()) && sharableContentMap.get(userBlog.getContentId()).isShared())
+                                .build()));
 
         return userSharablesResponse;
     }
@@ -139,13 +155,12 @@ public class ContentService {
     }
 
     private void putContentLink(String userId, String contentId, ContentType contentType, boolean shared) {
-        SharableContent sharableContent = new SharableContent();
-        sharableContent.setContentId(contentId);
-        sharableContent.setUserId(userId);
-        sharableContent.setContentType(contentType);
-        sharableContent.setShared(shared);
-
-        sharableRepository.insertSharableContent(sharableContent);
+        sharableRepository.insertSharableContent(SharableContent.builder()
+                        .contentId(contentId)
+                        .userId(userId)
+                        .contentType(contentType)
+                        .shared(shared)
+                .build());
     }
 
     private void putProfileContent(String userId, String contentId) {
