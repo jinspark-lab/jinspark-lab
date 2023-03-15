@@ -115,7 +115,9 @@ public class AppTest extends BaseAppTest {
     @Test
     public void testUserBlog() {
         String userId = "jinsangp@gmail.com";
+        userBlogRepository.insertUserBlog(userId, new UserBlog(userId, 0, "Test", "Test"));
         UserBlog userBlog = userBlogRepository.selectUserBlog(userId, 0);
+        userBlogRepository.deleteUserBlog(userId, 0);
         assertEquals(userBlog.getContent(), "Test");
     }
 
