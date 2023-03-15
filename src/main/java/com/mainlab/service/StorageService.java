@@ -23,6 +23,8 @@ public class StorageService {
 
     @Autowired
     private S3Client s3Client;
+    @Autowired
+    private AppLogService appLogService;
 
     public S3Client getS3Client() {
         return s3Client;
@@ -55,16 +57,17 @@ public class StorageService {
 
             InputStream inputStream = multipartFile.getInputStream();
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, inputStream.available()));
-
+            appLogService.info("object has been uploaded successfully - " + keyName);
             return keyName;
         } catch (IOException e) {
+            appLogService.error(e.getMessage());
             throw new BaseRuntimeException("Failed to upload Resources", ErrorCode.RESOURCE_UPLOAD_FAIL);
         }
     }
 
     public void deleteObjectFromS3(String objectPath) {
         S3Client s3Client = getS3Client();
-        System.out.println(objectPath + " has been deleted.");
+        appLogService.info(objectPath + " has been deleted.");
         DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
                 .bucket(getResourceBucketName())
                 .key(objectPath)
