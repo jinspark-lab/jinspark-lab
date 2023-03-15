@@ -43,7 +43,6 @@ public class UserProfileService {
     }
 
     private void updateUserProfile(String userId, UserProfile userProfile) {
-        userProfile.setUserId(userId);
         userProfileRepository.updateUserProfile(userId, userProfile);
     }
 
@@ -83,7 +82,7 @@ public class UserProfileService {
         return userProfileResponse;
     }
 
-    public void getProcessedUserProfile(UserProfileRequest userProfileRequest) {
+    public void updateCompleteUserProfile(UserProfileRequest userProfileRequest) {
         List<OperationUnit> operationUnitList = new LinkedList<>();
         String queryUserId = userService.getOperationUserId(OperationType.WRITE);
 
