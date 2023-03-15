@@ -51,7 +51,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
                 // Save User Info to SecurityContextHolder
                 userService.setUserContextHolder(userInfo);
-                appLogService.info("User has been logged in - " + userInfo.getUserId());
+//                appLogService.info("User has been logged in - " + userInfo.getUserId());
 
                 return super.preHandle(request, response, handler);
             } catch (AuthorizationException e) {
