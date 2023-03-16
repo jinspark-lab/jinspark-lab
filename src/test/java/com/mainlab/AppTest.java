@@ -51,7 +51,7 @@ public class AppTest extends BaseAppTest {
 
     @Test
     public void testStorage() {
-        Optional<Bucket> staticBucket = storageService.getS3Client().listBuckets().buckets().stream().filter(bucket -> bucket.name().equals("jinspark-lab-static-resource-bucket")).findAny();
+        Optional<Bucket> staticBucket = storageService.getS3Client().listBuckets().buckets().stream().filter(bucket -> bucket.name().equals("jinspark-lab-resource-bucket")).findAny();
         assertTrue(staticBucket.isPresent());
     }
 
