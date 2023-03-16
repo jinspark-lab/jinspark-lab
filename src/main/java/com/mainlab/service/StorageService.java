@@ -48,8 +48,9 @@ public class StorageService {
 
     public String uploadObjectToS3(MultipartFile multipartFile) {
         S3Client s3Client = getS3Client();
+        String keyName = "";
         try {
-            String keyName = generateRandomPartitionKey() + multipartFile.getOriginalFilename();
+            keyName = generateRandomPartitionKey() + multipartFile.getOriginalFilename();
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(getResourceBucketName())
                     .key(keyName)
@@ -60,7 +61,8 @@ public class StorageService {
             appLogService.info("object has been uploaded successfully - " + keyName);
             return keyName;
         } catch (IOException e) {
-            appLogService.error(e.getMessage());
+            appLogService.error("Error occurs accessing the bucket - " + getResourceBucketName() + " with key " + keyName
+                    + ". Message = " + e.getMessage());
             throw new BaseRuntimeException("Failed to upload Resources", ErrorCode.RESOURCE_UPLOAD_FAIL);
         }
     }
