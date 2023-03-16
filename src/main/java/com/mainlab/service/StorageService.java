@@ -60,7 +60,7 @@ public class StorageService {
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, inputStream.available()));
             appLogService.info("object has been uploaded successfully - " + keyName);
             return keyName;
-        } catch (IOException e) {
+        } catch (Exception e) {
             appLogService.error("Error occurs accessing the bucket - " + getResourceBucketName() + " with key " + keyName
                     + ". Message = " + e.getMessage());
             throw new BaseRuntimeException("Failed to upload Resources", ErrorCode.RESOURCE_UPLOAD_FAIL);
